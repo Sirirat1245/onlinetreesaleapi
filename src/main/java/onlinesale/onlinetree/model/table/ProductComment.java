@@ -26,6 +26,10 @@ public class ProductComment {
     @Column(name = "comment", columnDefinition = "text")
     private String comment;
 
+    //0: pending, 1: approve, 2: disapproved
+    @Column(name = "status")
+    private int status;
+
     @Column(name = "create_date")
     private LocalDateTime createDate = LocalDateTime.now(ZoneId.of("UTC+07:00"));
 }

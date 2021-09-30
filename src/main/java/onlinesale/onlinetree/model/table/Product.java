@@ -11,12 +11,23 @@ import javax.persistence.*;
 public class Product {
 
     @Id
-    @Column(name = "product_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+
+    //auto gen from front-end
+    @Column(name = "product_id")
     private int productId;
 
     @Column(name = "product_name")
     private String productName;
+
+    //check for sale(true) or wait to sale(false)
+    @Column(name = "status")
+    private Boolean status;
+
+    @Column(name = "product_type")
+    private int productType;
 
     @Column(name = "price")
     private int price;

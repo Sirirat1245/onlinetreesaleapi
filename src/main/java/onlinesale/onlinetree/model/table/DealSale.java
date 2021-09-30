@@ -17,8 +17,15 @@ public class DealSale {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int dealSaleId;
 
+    //from t.collectProduct เพื่อเช็คว่า product ที่เลือกเป็นอันไหน ใช้หรือยัง?
+    @Column(name = "collect_product_id")
+    private int collectProductId;
+
     @Column(name = "order_id")
     private int orderId;
+
+    @Column(name = "order_amount_id")
+    private int orderAmountId;
 
     @Column(name = "product_id")
     private int productId;
@@ -34,6 +41,17 @@ public class DealSale {
 
     @Column(name = "discount_price")
     private int discountPrice;
+
+    //จำนวนที่สั่ง
+    @Column(name = "quantity")
+    private int quantity;
+
+    //0 = true, 1 = false
+    @Column(name = "status")
+    private int status;
+
+    @Column(name = "cancel")
+    private int cancel;
 
     @Column(name = "order_date")
     private LocalDateTime orderDate = LocalDateTime.now(ZoneId.of("UTC+07:00"));

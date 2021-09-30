@@ -18,8 +18,11 @@ public class ProfileRegister {
     @Column(name = "user_name")
     private String userName;
 
-    @Column(name = "password")
+    @Column(name = "pass_word")
     private String passWord;
+
+    @Column(name = "prefix")
+    private String prefix;
 
     @Column(name = "first_name")
     private String firstName;
@@ -31,7 +34,7 @@ public class ProfileRegister {
     private String email;
 
     @Column(name = "tel")
-    private int tel;
+    private String tel;
 
     @Column(name = "address")
     private String address;
@@ -39,9 +42,10 @@ public class ProfileRegister {
     @Column(name = "code_get_friend")
     private String codeGetFriend;
 
+    //true = active, false = inactive
     @Column(name = "status")
     private boolean status;
 
-    @Column(name = "userType")
+    @Column(name = "user_type")
     private int userType;
 }

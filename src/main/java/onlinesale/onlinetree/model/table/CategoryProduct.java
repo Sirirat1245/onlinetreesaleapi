@@ -17,4 +17,10 @@ public class CategoryProduct {
 
     @Column(name = "category_name")
     private String categoryName;
+
+    @Column(name = "product_type")
+    private int productType;
+
+    @Column(name = "category_pic")
+    private String categoryPic;
 }
