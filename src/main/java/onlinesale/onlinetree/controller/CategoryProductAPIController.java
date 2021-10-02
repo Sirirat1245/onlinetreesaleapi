@@ -67,6 +67,21 @@ public class CategoryProductAPIController {
         return res;
     }
 
+    @PostMapping("/list_all")
+    public Object listAll(){
+        APIResponse res = new APIResponse();
+        try{
+            List lstAll = categoryProductRepository.findAll();
+            res.setStatus(1);
+            res.setMessage("list all");
+            res.setData(lstAll);
+        }catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("err : " + err.toString());
+        }
+        return res;
+    }
+
     @PostMapping("/list")
     public Object list(CategoryProduct categoryProduct){
         APIResponse res = new APIResponse();
