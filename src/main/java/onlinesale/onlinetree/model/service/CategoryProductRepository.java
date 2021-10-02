@@ -20,6 +20,12 @@ public interface CategoryProductRepository extends JpaRepository<CategoryProduct
 
     public List<CategoryProduct> findByProductType(Integer productType);
 
+    @Query(value = "SELECT COUNT(*) FROM category_product",nativeQuery = true)
+    public Integer getAmountCategoryProduct();
+
+    @Query(value = "SELECT *  FROM category_product ORDER BY product_type DESC LIMIT 1",nativeQuery = true)
+    public CategoryProduct getLastByProductType();
+
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE category_product " +

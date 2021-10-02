@@ -29,6 +29,7 @@ public class CategoryProductAPIController {
                     categoryProduct.getCategoryName());
             System.out.println("*********_catProduct**********" + _catProduct);
             if(_catProduct == null){
+                /* File transfer */
                 if(file != null){
                     File fileToSave = new File(conf.getStorePath()+categoryProduct.getCategoryName()+".png");
                     file.transferTo(fileToSave);
@@ -37,7 +38,20 @@ public class CategoryProductAPIController {
                 }else{
                     System.out.println("file not found!");
                 }
+                /* End file transfer */
+
+                /* Generate product type in Category Product */
+                Integer _catAmount = categoryProductRepository.getAmountCategoryProduct();
+                if(_catAmount == 0){
+                    categoryProduct.setProductType(1000); //start with 1000
+                }else{
+                    CategoryProduct _lastProductType = categoryProductRepository.getLastByProductType();
+                    categoryProduct.setProductType(_lastProductType.getProductType()+1);
+                }
+                /* End Generate product type in Category Product */
+
                 categoryProductRepository.save(categoryProduct);
+
                 res.setStatus(1);
                 res.setMessage("save");
                 res.setData(categoryProduct);
