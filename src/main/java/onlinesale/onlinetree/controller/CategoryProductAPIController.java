@@ -1,13 +1,13 @@
 package onlinesale.onlinetree.controller;
 
+import onlinesale.onlinetree.config.Config;
 import onlinesale.onlinetree.model.service.CategoryProductRepository;
 import onlinesale.onlinetree.model.table.CategoryProduct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -19,8 +19,9 @@ public class CategoryProductAPIController {
     private CategoryProductRepository categoryProductRepository;
 
     @PostMapping("/save")
-    public Object create(CategoryProduct categoryProduct){
+    public Object create(CategoryProduct categoryProduct, @RequestParam(value = "file",required = false) MultipartFile file){
         APIResponse res = new APIResponse();
+        Config conf = new Config();
         try {
             System.out.println("*********getProductId**********" + categoryProduct.getCategoryProductId());
             System.out.println("********getProductName*********" + categoryProduct.getCategoryName());
@@ -28,6 +29,14 @@ public class CategoryProductAPIController {
                     categoryProduct.getCategoryName());
             System.out.println("*********_catProduct**********" + _catProduct);
             if(_catProduct == null){
+                if(file != null){
+                    File fileToSave = new File(conf.getStorePath()+categoryProduct.getCategoryName()+".png");
+                    file.transferTo(fileToSave);
+                    System.out.println("save file success");
+                    categoryProduct.setCategoryPic(categoryProduct.getCategoryName()+".png");
+                }else{
+                    System.out.println("file not found!");
+                }
                 categoryProductRepository.save(categoryProduct);
                 res.setStatus(1);
                 res.setMessage("save");
