@@ -33,7 +33,7 @@ public class CategoryProductAPIController {
             if(_catProduct == null){
                 /* File transfer */
                 if(file != null){
-                    File fileToSave = new File(conf.getStorePath()+categoryProduct.getCategoryName()+".png");
+                    File fileToSave = new File(conf.getStorePath()+"category\\"+categoryProduct.getCategoryName()+".png");
                     file.transferTo(fileToSave);
                     System.out.println("save file success");
                     categoryProduct.setCategoryPic(categoryProduct.getCategoryName()+".png");
@@ -113,7 +113,7 @@ public class CategoryProductAPIController {
 
             /* File transfer */
             if(file != null){
-                File fileToSave = new File(conf.getStorePath()+categoryProduct.getCategoryName()+".png");
+                File fileToSave = new File(conf.getStorePath()+"category\\"+categoryProduct.getCategoryName()+".png");
                 fileToSave.delete();
                 file.transferTo(fileToSave);
                 System.out.println("update file success");
@@ -121,8 +121,8 @@ public class CategoryProductAPIController {
             }else{
                 CategoryProduct detail = categoryProductRepository.findCategoryProduct(categoryProduct.getProductType());
 
-                File source = new File(conf.getStorePath()+detail.getCategoryPic());
-                File dest = new File(conf.getStorePath()+categoryProduct.getCategoryName()+".png");
+                File source = new File(conf.getStorePath()+"category\\"+detail.getCategoryPic());
+                File dest = new File(conf.getStorePath()+"category\\"+categoryProduct.getCategoryName()+".png");
                 FileSystemUtils.copyRecursively(source,dest);
 
                 categoryProduct.setCategoryPic(categoryProduct.getCategoryName()+".png");
