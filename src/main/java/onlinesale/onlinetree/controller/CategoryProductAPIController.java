@@ -31,16 +31,6 @@ public class CategoryProductAPIController {
                     categoryProduct.getCategoryName());
             System.out.println("*********_catProduct**********" + _catProduct);
             if(_catProduct == null){
-                /* File transfer */
-                if(file != null){
-                    File fileToSave = new File(conf.getStorePath()+"category\\"+categoryProduct.getCategoryName()+".png");
-                    file.transferTo(fileToSave);
-                    System.out.println("save file success");
-                    categoryProduct.setCategoryPic(categoryProduct.getCategoryName()+".png");
-                }else{
-                    System.out.println("file not found!");
-                }
-                /* End file transfer */
 
                 /* Generate product type in Category Product */
                 Integer _catAmount = categoryProductRepository.getAmountCategoryProduct();
@@ -51,6 +41,18 @@ public class CategoryProductAPIController {
                     categoryProduct.setProductType(_lastProductType.getProductType()+1);
                 }
                 /* End Generate product type in Category Product */
+
+                /* File transfer */
+                if(file != null){
+                    new File(conf.getStorePath()+"category").mkdirs();
+                    File fileToSave = new File(conf.getStorePath()+"category\\cate-product-"+categoryProduct.getProductType()+".png");
+                    file.transferTo(fileToSave);
+                    System.out.println("save file success");
+                    categoryProduct.setCategoryPic("cate-product-"+categoryProduct.getProductType()+".png");
+                }else{
+                    System.out.println("file not found!");
+                }
+                /* End file transfer */
 
                 categoryProductRepository.save(categoryProduct);
 
@@ -113,19 +115,21 @@ public class CategoryProductAPIController {
 
             /* File transfer */
             if(file != null){
-                File fileToSave = new File(conf.getStorePath()+"category\\"+categoryProduct.getCategoryName()+".png");
+                File fileToSave = new File(conf.getStorePath()+"category\\cate-product-"+categoryProduct.getProductType()+".png");
                 fileToSave.delete();
                 file.transferTo(fileToSave);
                 System.out.println("update file success");
-                categoryProduct.setCategoryPic(categoryProduct.getCategoryName()+".png");
+                categoryProduct.setCategoryPic("cate-product-"+categoryProduct.getProductType()+".png");
+                res.setMessage("edit with file");
             }else{
+                /* Keep code copy file
                 CategoryProduct detail = categoryProductRepository.findCategoryProduct(categoryProduct.getProductType());
-
                 File source = new File(conf.getStorePath()+"category\\"+detail.getCategoryPic());
-                File dest = new File(conf.getStorePath()+"category\\"+categoryProduct.getCategoryName()+".png");
+                File dest = new File(conf.getStorePath()+"category\\"+categoryProduct.getCategoryPic());
                 FileSystemUtils.copyRecursively(source,dest);
-
-                categoryProduct.setCategoryPic(categoryProduct.getCategoryName()+".png");
+                categoryProduct.setCategoryPic(categoryProduct.getCategoryPic());
+                 ---------------- */
+                res.setMessage("edit not file");
             }
             /* End file transfer */
             
@@ -138,7 +142,7 @@ public class CategoryProductAPIController {
             System.out.println("status : " + status);
             if(status == 1){
                 res.setStatus(1);
-                res.setMessage("edit");
+//                res.setMessage("edit");
                 res.setData(categoryProductRepository.findByCategoryProductId(categoryProduct.getCategoryProductId()));
             }
         } catch (Exception err){
@@ -151,7 +155,10 @@ public class CategoryProductAPIController {
     @PostMapping("/delete")
     public Object delete(CategoryProduct categoryProduct){
         APIResponse res = new APIResponse();
+        Config conf = new Config();
         try{
+            CategoryProduct detail = categoryProductRepository.findByCategoryProductId(categoryProduct.getCategoryProductId());
+            new File(conf.getStorePath()+"category\\"+detail.getCategoryPic()).delete();
             categoryProductRepository.deleteById(categoryProduct.getCategoryProductId());
             res.setStatus(1);
             res.setMessage("delete product");
