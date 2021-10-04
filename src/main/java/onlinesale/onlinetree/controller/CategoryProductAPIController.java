@@ -3,7 +3,9 @@ package onlinesale.onlinetree.controller;
 import onlinesale.onlinetree.config.Config;
 import onlinesale.onlinetree.model.service.CategoryProductRepository;
 import onlinesale.onlinetree.model.table.CategoryProduct;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -104,9 +106,29 @@ public class CategoryProductAPIController {
     }
 
     @PostMapping("/edit")
-    public Object edit(CategoryProduct categoryProduct){
+    public Object edit(CategoryProduct categoryProduct,@RequestParam(value = "file",required = false) MultipartFile file){
         APIResponse res = new APIResponse();
+        Config conf = new Config();
         try {
+
+            /* File transfer */
+            if(file != null){
+                File fileToSave = new File(conf.getStorePath()+categoryProduct.getCategoryName()+".png");
+                fileToSave.delete();
+                file.transferTo(fileToSave);
+                System.out.println("update file success");
+                categoryProduct.setCategoryPic(categoryProduct.getCategoryName()+".png");
+            }else{
+                CategoryProduct detail = categoryProductRepository.findCategoryProduct(categoryProduct.getProductType());
+
+                File source = new File(conf.getStorePath()+detail.getCategoryPic());
+                File dest = new File(conf.getStorePath()+categoryProduct.getCategoryName()+".png");
+                FileSystemUtils.copyRecursively(source,dest);
+
+                categoryProduct.setCategoryPic(categoryProduct.getCategoryName()+".png");
+            }
+            /* End file transfer */
+            
             Integer status = categoryProductRepository.updateCategoryProduct(
                     categoryProduct.getCategoryName(),
                     categoryProduct.getProductType(),

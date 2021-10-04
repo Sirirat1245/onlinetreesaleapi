@@ -26,6 +26,9 @@ public interface CategoryProductRepository extends JpaRepository<CategoryProduct
     @Query(value = "SELECT *  FROM category_product ORDER BY product_type DESC LIMIT 1",nativeQuery = true)
     public CategoryProduct getLastByProductType();
 
+    @Query(value = "SELECT *  FROM category_product WHERE product_type = :product_type",nativeQuery = true)
+    public CategoryProduct findCategoryProduct(@Param("product_type") Integer productType);
+
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE category_product " +
