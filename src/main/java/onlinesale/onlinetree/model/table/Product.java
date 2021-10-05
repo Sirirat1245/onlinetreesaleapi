@@ -15,7 +15,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    //auto gen from front-end
+    //auto gen from front-end  ... edit auto gen from back-end
     @Column(name = "product_id")
     private int productId;
 

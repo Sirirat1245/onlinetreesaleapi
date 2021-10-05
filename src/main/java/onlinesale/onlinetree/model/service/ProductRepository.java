@@ -1,5 +1,6 @@
 package onlinesale.onlinetree.model.service;
 
+import onlinesale.onlinetree.model.table.CategoryProduct;
 import onlinesale.onlinetree.model.table.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -11,11 +12,18 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
-    public Product findByProductIdAndProductName(Integer productId, String productName);
+    public Product findByProductIdOrProductName(Integer productId, String productName);
 
     public Product findByProductId(Integer productId);
 
     public List<Product> findByProductType(Integer productType);
+
+    @Query(value = "SELECT COUNT(*) FROM product",nativeQuery = true)
+    public Integer getAmountProduct();
+
+    @Query(value = "SELECT *  FROM product ORDER BY product_id DESC LIMIT 1",nativeQuery = true)
+    public Product getLastByProductId();
+
 
     @Transactional
     @Modifying(clearAutomatically = true)
