@@ -134,10 +134,71 @@ public class ProductAPIController {
     }
 
     @PostMapping("/edit")
-    public Object edit(Product product){
+    public Object edit(Product product,
+                       @RequestParam(value = "file1",required = false) MultipartFile file1,
+                       @RequestParam(value = "file2",required = false) MultipartFile file2,
+                       @RequestParam(value = "file3",required = false) MultipartFile file3,
+                       @RequestParam(value = "file4",required = false) MultipartFile file4,
+                       @RequestParam(value = "file5",required = false) MultipartFile file5
+    ){
         APIResponse res = new APIResponse();
+        Config conf = new Config();
         try {
             System.out.println("product : " + product);
+            /* File transfer */
+            if(file1 != null){
+                System.out.println("product : " + product);
+                File fileToSave = new File(conf.getStorePath()+"product\\"+product.getProductType()+"\\product-"+product.getProductId()+"-1"+".png");
+                fileToSave.delete();
+                file1.transferTo(fileToSave);
+                System.out.println("update file 1 success");
+                product.setProductPic("product-"+product.getProductId()+"-1"+".png");
+                res.setMessage("edit with file 1");
+            }else{
+                res.setMessage("edit not file 1");
+            }
+            if(file2 != null){
+                File fileToSave = new File(conf.getStorePath()+"product\\"+product.getProductType()+"\\product-"+product.getProductId()+"-2"+".png");
+                fileToSave.delete();
+                file2.transferTo(fileToSave);
+                System.out.println("update file 2 success");
+                product.setPicOne("product-"+product.getProductId()+"-2"+".png");
+                res.setMessage("edit with file 2");
+            }else{
+                res.setMessage("edit not file 2");
+            }
+            if(file3 != null){
+                File fileToSave = new File(conf.getStorePath()+"product\\"+product.getProductType()+"\\product-"+product.getProductId()+"-3"+".png");
+                fileToSave.delete();
+                file3.transferTo(fileToSave);
+                System.out.println("update file 3 success");
+                product.setPicTwo("product-"+product.getProductId()+"-3"+".png");
+                res.setMessage("edit with file 3");
+            }else{
+                res.setMessage("edit not file 3");
+            }
+            if(file4 != null){
+                File fileToSave = new File(conf.getStorePath()+"product\\"+product.getProductType()+"\\product-"+product.getProductId()+"-4"+".png");
+                fileToSave.delete();
+                file4.transferTo(fileToSave);
+                System.out.println("update file 4 success");
+                product.setPicThree("product-"+product.getProductId()+"-4"+".png");
+                res.setMessage("edit with file 4");
+            }else{
+                res.setMessage("edit not file 4");
+            }
+            if(file5 != null){
+                File fileToSave = new File(conf.getStorePath()+"product\\"+product.getProductType()+"\\product-"+product.getProductId()+"-5"+".png");
+                fileToSave.delete();
+                file5.transferTo(fileToSave);
+                System.out.println("update file 5 success");
+                product.setPicFour("product-"+product.getProductId()+"-5"+".png");
+                res.setMessage("edit with file 5");
+            }else{
+                res.setMessage("edit not file 5");
+            }
+            /* End file transfer */
+
             Integer status = productRepository.updateProduct(
                     product.getProductName(),
                     product.getStatus(),
@@ -165,11 +226,37 @@ public class ProductAPIController {
         return res;
     }
 
+    @PostMapping("/detail_product")
+    public Object detail(Product product){
+        APIResponse res = new APIResponse();
+        try{
+            Product detail = productRepository.findByProductId(product.getProductId());
+            res.setStatus(1);
+            res.setMessage("detail");
+            res.setData(detail);
+        }catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("err : " + err.toString());
+        }
+        return res;
+    }
+
     @PostMapping("/delete_product")
     public Object delete(Product product){
         APIResponse res = new APIResponse();
+        Config conf = new Config();
         try{
-            productRepository.deleteById(product.getId());
+            /* --- Start delete Files --- */
+            Product detail = productRepository.findByProductId(product.getProductId());
+            if(detail.getProductPic() != null)new File(conf.getStorePath()+"product\\"+detail.getProductType()+"\\"+detail.getProductPic()).delete();
+            if(detail.getPicOne() != null)new File(conf.getStorePath()+"product\\"+detail.getProductType()+"\\"+detail.getPicOne()).delete();
+            if(detail.getPicTwo() != null)new File(conf.getStorePath()+"product\\"+detail.getProductType()+"\\"+detail.getPicTwo()).delete();
+            if(detail.getPicThree() != null)new File(conf.getStorePath()+"product\\"+detail.getProductType()+"\\"+detail.getPicThree()).delete();
+            if(detail.getPicFour() != null)new File(conf.getStorePath()+"product\\"+detail.getProductType()+"\\"+detail.getPicFour()).delete();
+            /* --- End delete Files --- */
+
+            productRepository.deleteById(detail.getId());
+
             res.setStatus(1);
             res.setMessage("delete product");
             res.setData(product);
