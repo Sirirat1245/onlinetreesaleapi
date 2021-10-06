@@ -2,12 +2,15 @@ package onlinesale.onlinetree.controller;
 
 import onlinesale.onlinetree.model.service.ProfileRegisterRepository;
 import onlinesale.onlinetree.model.table.DiscountForFriend;
+import onlinesale.onlinetree.model.table.PayFor;
 import onlinesale.onlinetree.model.table.ProfileRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -93,6 +96,90 @@ public class ProfileRegisterAPIController {
         }catch (Exception err){
             res.setStatus(-1);
             res.setMessage("error : " + err.toString());
+        }
+        return res;
+    }
+
+    //for admin update user to cancel
+    @PostMapping("/update_user")
+    public Object updateUser(ProfileRegister profileRegister){
+        APIResponse res = new APIResponse();
+        try {
+            Integer status = profileRegisterRepository.updateProfileRegisterByProfileRegisterId(
+                    profileRegister.getProfileRegisterId()
+            );
+            System.out.println("status : " + status);
+            if(status == 1){
+                res.setStatus(1);
+                res.setMessage("edit");
+                res.setData(profileRegisterRepository.findByProfileRegisterId(
+                        profileRegister.getProfileRegisterId()
+                ));
+            }
+        }catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("error : " + err.toString());
+        }
+        return res;
+    }
+
+    @PostMapping("/delete")
+    public Object delete(ProfileRegister profileRegister){
+        APIResponse res = new APIResponse();
+        try{
+            profileRegisterRepository.deleteById(profileRegister.getProfileRegisterId());
+            res.setStatus(1);
+            res.setMessage("delete profile");
+            res.setData(profileRegister);
+        }catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("err : " + err.toString());
+        }
+        return res;
+    }
+
+    @PostMapping("/detail")
+    public Object detail(ProfileRegister profileRegister){
+        APIResponse res = new APIResponse();
+        try {
+            ProfileRegister dbProfile = profileRegisterRepository.findByProfileRegisterId(profileRegister.getProfileRegisterId());
+            if( dbProfile == null ){
+                res.setStatus(0);
+                res.setMessage("no user");
+                res.setData(profileRegister);
+            } else {
+                res.setStatus(1);
+                res.setMessage("success");
+                res.setData(dbProfile);
+            }
+        } catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("err : " + err.toString());
+        }
+
+        return res;
+    }
+
+    //list from status = true, false
+    @PostMapping("/list_profile_register")
+    public Object listProfileRegister(ProfileRegister profileRegister){
+        APIResponse res = new APIResponse();
+        try {
+            List<ProfileRegister> lstData = profileRegisterRepository.lstProfileRegisterByStatus(
+                    profileRegister.isStatus()
+            );
+            System.out.println("********* lstData ********" + lstData);
+            if (lstData == null){
+                res.setStatus(0);
+                res.setMessage("don't have profile");
+            } else {
+                res.setStatus(1);
+                res.setMessage("show list");
+                res.setData(lstData);
+            }
+        } catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("err : " + err.toString());
         }
         return res;
     }
