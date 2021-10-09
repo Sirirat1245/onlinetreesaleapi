@@ -105,6 +105,20 @@ public class PayForAPIController {
 //        return res;
 //    }
 
+    @PostMapping("/list_all")
+    public Object listAll(PayFor payFor){
+        APIResponse res = new APIResponse();
+        try{
+            res.setStatus(1);
+            res.setMessage("list all");
+            res.setData(payForRepository.findAll());
+        }catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("err : " + err.toString());
+        }
+        return res;
+    }
+
     @PostMapping("/delete")
     public Object delete(PayFor payFor){
         APIResponse res = new APIResponse();

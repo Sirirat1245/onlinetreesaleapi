@@ -50,7 +50,7 @@ public interface PayForRepository extends JpaRepository<PayFor, Integer> {
                                          @Param("use_account_pay") String useAccountPay,
                                          @Param("pay_for_price") Number payForPrice,
                                          @Param("email") String email,
-                                         @Param("tel") Integer tel,
+                                         @Param("tel") String tel,
                                          @Param("date_time") LocalDateTime dateTime,
                                          @Param("pay_for_id") Integer payForId,
                                          @Param("profile_register_id") Integer profileRegisterId,

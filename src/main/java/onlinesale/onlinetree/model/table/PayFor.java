@@ -53,7 +53,7 @@ public class PayFor {
     private String email;
 
     @Column(name = "tel")
-    private int tel;
+    private String tel;
 
     //for check time by admin
     @Column(name = "date_time")

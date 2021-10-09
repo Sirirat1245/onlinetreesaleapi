@@ -132,6 +132,21 @@ public class ProductAPIController {
 
         return res;
     }
+    @PostMapping("/list_all")
+    public Object listAll(){
+        APIResponse res = new APIResponse();
+        try {
+                res.setStatus(1);
+                res.setMessage("show list");
+                res.setData(productRepository.findAll());
+
+        } catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("err : " + err.toString());
+        }
+
+        return res;
+    }
 
     @PostMapping("/edit")
     public Object edit(Product product,
