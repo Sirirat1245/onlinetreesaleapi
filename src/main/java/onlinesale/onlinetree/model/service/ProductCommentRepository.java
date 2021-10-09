@@ -15,6 +15,8 @@ public interface ProductCommentRepository extends JpaRepository<ProductComment, 
 
     public ProductComment findByProductIdAndProductCommentId(Integer ProductId, Integer ProductCommentId);
 
+    public ProductComment findByProductCommentId(Integer ProductCommentId);
+
     public ProductComment findByProductIdAndProductCommentIdAndProfileRegisterId(
             Integer ProductId,
             Integer productCommentId,
@@ -45,6 +47,15 @@ public interface ProductCommentRepository extends JpaRepository<ProductComment, 
                                              @Param("product_id") Integer productId,
                                              @Param("product_comment_id") Integer productCommentId);
 
+    //admin update product comment at status = 1: approve, 2: disapproved
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "UPDATE product_comment " +
+            "SET status = :status " +
+            "WHERE product_comment_id = :product_comment_id")
+    public Integer updateProductCommentAdminByProductCommentId(@Param("status") Integer status,
+                                                               @Param("product_comment_id") Integer productCommentId);
+
 
     public List<ProductComment> findByProductId(Integer productId);
 
@@ -52,5 +63,4 @@ public interface ProductCommentRepository extends JpaRepository<ProductComment, 
 
     //admin list productComment for check status true, false (ตอนแอดมินจะเช็คเพื่ออนุมัติ)
     public List<ProductComment> findByStatus(Integer status);
-
 }

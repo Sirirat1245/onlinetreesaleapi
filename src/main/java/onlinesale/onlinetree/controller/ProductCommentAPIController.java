@@ -4,6 +4,7 @@ import onlinesale.onlinetree.model.service.ProductCommentRepository;
 import onlinesale.onlinetree.model.table.CollectProduct;
 import onlinesale.onlinetree.model.table.PayFor;
 import onlinesale.onlinetree.model.table.ProductComment;
+import onlinesale.onlinetree.model.table.ProfileRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ public class ProductCommentAPIController {
     @Autowired
     private ProductCommentRepository productCommentRepository;
 
+    //user บันทึกการแสดงความคิดเห็นตอนแรก แสดง status = pending, ถ้า admin อนุมัติ status = approve, ถ้า admin ไม่อนุมัติ status = disapproved
     @PostMapping("/save")
     public Object create(ProductComment productComment){
         APIResponse res = new APIResponse();
@@ -163,6 +165,49 @@ public class ProductCommentAPIController {
             res.setStatus(-1);
             res.setMessage("err : " + err.toString());
         }
+        return res;
+    }
+
+    @PostMapping("/update_status")
+    public Object updateStatus(ProductComment productComment){
+        APIResponse res = new APIResponse();
+        try {
+            Integer status = productCommentRepository.updateProductCommentAdminByProductCommentId(
+                    productComment.getStatus(),
+                    productComment.getProductCommentId()
+            );
+            System.out.println("status : " + status);
+            if(status == 1){
+                res.setStatus(1);
+                res.setMessage("edit");
+                res.setData(productCommentRepository.findByProductCommentId(productComment.getProductCommentId()));
+            }
+        }catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("error : " + err.toString());
+        }
+        return res;
+    }
+
+    @PostMapping("/detail")
+    public Object detail(ProductComment productComment){
+        APIResponse res = new APIResponse();
+        try {
+            ProductComment dbProduct = productCommentRepository.findByProductCommentId(productComment.getProductCommentId());
+            if( dbProduct == null ){
+                res.setStatus(0);
+                res.setMessage("no product");
+                res.setData(productComment);
+            } else {
+                res.setStatus(1);
+                res.setMessage("success");
+                res.setData(dbProduct);
+            }
+        } catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("err : " + err.toString());
+        }
+
         return res;
     }
 }
