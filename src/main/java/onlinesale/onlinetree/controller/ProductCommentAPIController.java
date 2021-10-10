@@ -53,7 +53,7 @@ public class ProductCommentAPIController {
                 System.out.println("********* in if profileRegisterId ********" + profileRegisterId);
                 Integer statusUser = productCommentRepository.updateProductCommentUser(
                         productComment.getComment(),
-                        productComment.getCreateDate(),
+//                        productComment.getCreateDate(),
                         productComment.getProductId(),
                         productComment.getProfileRegisterId(),
                         productComment.getProductCommentId()

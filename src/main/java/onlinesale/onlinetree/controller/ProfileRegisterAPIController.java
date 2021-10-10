@@ -183,4 +183,28 @@ public class ProfileRegisterAPIController {
         }
         return res;
     }
+
+    @PostMapping("/list_all")
+    public Object listAll(){
+        APIResponse res = new APIResponse();
+        try {
+                res.setStatus(1);
+                res.setMessage("show list");
+                res.setData(profileRegisterRepository.findAll());
+        } catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("err : " + err.toString());
+        }
+        return res;
+    }
+
+    @PostMapping("/get_fullname")
+    public String getFullName(ProfileRegister profileRegister){
+        try{
+            ProfileRegister detail = profileRegisterRepository.findByProfileRegisterId(profileRegister.getProfileRegisterId());
+            return detail.getFirstName()+" "+detail.getLastName();
+        }catch (Exception err){
+            return "err : " + err.toString();
+        }
+    }
 }

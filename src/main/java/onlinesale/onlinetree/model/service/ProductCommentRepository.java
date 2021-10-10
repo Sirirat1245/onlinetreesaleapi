@@ -26,13 +26,12 @@ public interface ProductCommentRepository extends JpaRepository<ProductComment, 
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE product_comment " +
-            "SET comment = :comment, " +
-            "create_date = :create_date " +
+            "SET comment = :comment " +
             "WHERE product_id = :product_id " +
             "AND profile_register_id = :profile_register_id " +
             "AND product_comment_id = :product_comment_id")
     public Integer updateProductCommentUser(@Param("comment") String comment,
-                                            @Param("create_date") LocalDateTime createDate,
+//                                            @Param("create_date") LocalDateTime createDate,
                                             @Param("product_id") Integer productId,
                                             @Param("profile_register_id") Integer profileRegisterId,
                                             @Param("product_comment_id") Integer productCommentId);
