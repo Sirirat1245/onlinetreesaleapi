@@ -53,7 +53,7 @@ public class ProductCommentAPIController {
                 System.out.println("********* in if profileRegisterId ********" + profileRegisterId);
                 Integer statusUser = productCommentRepository.updateProductCommentUser(
                         productComment.getComment(),
-//                        productComment.getCreateDate(),
+                        productComment.getStatus(),
                         productComment.getProductId(),
                         productComment.getProfileRegisterId(),
                         productComment.getProductCommentId()
@@ -208,6 +208,20 @@ public class ProductCommentAPIController {
             res.setMessage("err : " + err.toString());
         }
 
+        return res;
+    }
+
+    @PostMapping("/list_all")
+    public Object listAll(){
+        APIResponse res = new APIResponse();
+        try{
+            res.setStatus(1);
+            res.setMessage("list all");
+            res.setData(productCommentRepository.findAll());
+        }catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("err : " + err.toString());
+        }
         return res;
     }
 }
