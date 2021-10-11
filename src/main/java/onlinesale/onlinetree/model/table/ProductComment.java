@@ -30,6 +30,12 @@ public class ProductComment {
     @Column(name = "status")
     private int status;
 
+    @Column(name="product_name")
+    private String productName;
+
+    @Column(name="profile_register_name")
+    private String profileRegisterName;
+
     @Column(name = "create_date")
     private LocalDateTime createDate = LocalDateTime.now(ZoneId.of("UTC+07:00"));
 }

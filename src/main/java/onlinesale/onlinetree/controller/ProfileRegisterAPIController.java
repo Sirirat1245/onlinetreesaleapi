@@ -201,6 +201,7 @@ public class ProfileRegisterAPIController {
     @PostMapping("/get_fullname")
     public String getFullName(ProfileRegister profileRegister){
         try{
+            System.out.println(profileRegister.getProfileRegisterId());
             ProfileRegister detail = profileRegisterRepository.findByProfileRegisterId(profileRegister.getProfileRegisterId());
             return detail.getFirstName()+" "+detail.getLastName();
         }catch (Exception err){
