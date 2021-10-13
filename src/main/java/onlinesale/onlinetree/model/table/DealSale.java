@@ -27,8 +27,8 @@ public class DealSale {
     @Column(name = "order_amount_id")
     private int orderAmountId;
 
-    @Column(name = "product_id")
-    private int productId;
+//    @Column(name = "product_id")
+//    private int productId;
 
     @Column(name = "profile_register_id")
     private int profileRegisterId;

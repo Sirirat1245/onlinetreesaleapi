@@ -10,11 +10,11 @@ import java.util.List;
 
 public interface DealSaleRepository extends JpaRepository<DealSale, Integer> {
 
-    public DealSale findByProfileRegisterIdAndOrderIdAndProductId(
-            Integer profileRegisterId,
-            Integer orderId,
-            Integer productId
-    );
+//    public DealSale findByProfileRegisterIdAndOrderIdAndProductId(
+//            Integer profileRegisterId,
+//            Integer orderId,
+//            Integer productId
+//    );
 
     @Query(value = "SELECT * FROM deal_sale " +
             "WHERE profile_register_id = :profile_register_id " +

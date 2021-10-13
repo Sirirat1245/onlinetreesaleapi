@@ -39,8 +39,13 @@ public class ProfileRegister {
     @Column(name = "address")
     private String address;
 
+    //code ที่เอามาจากเพื่อน
     @Column(name = "code_get_friend")
     private String codeGetFriend;
+
+    //code ของเราที่เอาให้เพื่อนได้
+    @Column(name = "my_code")
+    private String myCode;
 
     //true = active, false = inactive
     @Column(name = "status")
