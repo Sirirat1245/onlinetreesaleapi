@@ -108,4 +108,19 @@ public class CollectProductAPIController {
         }
         return res;
     }
+
+
+    @PostMapping("/delete")
+    public Object delete(CollectProduct collectProduct){
+        APIResponse res = new APIResponse();
+        try {
+            collectProductRepository.deleteById(collectProduct.getCollectProductId());
+            res.setStatus(1);
+            res.setMessage("delete");
+        }catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("err : " + err.toString());
+        }
+        return res;
+    }
 }
