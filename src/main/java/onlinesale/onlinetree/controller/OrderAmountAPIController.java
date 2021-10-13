@@ -60,6 +60,7 @@ public class OrderAmountAPIController {
     //เอาราคาทรวมี่ได้จาก api prepare_to_buy ที่แสดงบนหน้าเว็บตอนหลังจากกดเตรียมซื้อ
     //กดยืนยันการซื้อแล้วถึงจะมายิง api เส้นนี้
     //สร้างตอน user สั่งซื้อของ และนำมาคำนวนที่ api นี้ ว่าสั่งซื้อถึงจำนวนที่จะได้ส่วนลดหรือไม่ ?
+    //discount_for_friend_id = 0 (ไม่ได้ discount)
     @PostMapping("/calculate")
     public Object create(OrderAmount orderAmount){
         APIResponse res = new APIResponse();
@@ -74,77 +75,98 @@ public class OrderAmountAPIController {
             );
             System.out.println("dataFriend: " + dataFriend);
             System.out.println(orderAmount.getAmountOrder() >= dataDiscount.getMinimumAmount());
-            if(orderAmount.getAmountOrder() >= dataDiscount.getMinimumAmount()){
-                System.out.println("------------");
-                System.out.println("conditions are correct");
-                System.out.println("------------");
-                OrderAmount checkOrder = orderAmountRepository.findByProfileRegisterIdAndDiscountForFriendId(
-                        orderAmount.getProfileRegisterId(),
-                        dataFriend.getDiscountForFriendId()
-                );
-                System.out.println("------checkOrder------" + checkOrder);
-                if(checkOrder == null){
-                    OrderAmount dataStatusTrue = orderAmountRepository.save(orderAmount);
-                    System.out.println("dataStatusTrue" + dataStatusTrue);
-                    if (dataStatusTrue != null){
-                        System.out.println("save statusTrue");
-                        Integer update = orderAmountRepository.updateOrderAmountStatusTrue(
-                                orderAmount.getAmountOrder(),
-                                dataFriend.getDiscountForFriendId(),
-                                orderAmount.getProfileRegisterId(),
-                                orderAmount.getOrderAmountId()
-                        );
-                        System.out.println("update: " + update);
-                        System.out.println("dataStatusTrue.getOrderAmountId(): " + dataStatusTrue.getOrderAmountId());
-                        if(update == 1){
-                            res.setStatus(1);
-                            res.setMessage("create amount order success");
-                            res.setData(orderAmountRepository.findById(dataStatusTrue.getOrderAmountId()));
-                        }
-                    }
-                }else {
-                    res.setStatus(0);
-                    res.setMessage("repeat");
-                }
-            }else {
-                System.out.println("------------");
-                System.out.println("The condition is not correct");
-                System.out.println("------------");
-                OrderAmount profileData = orderAmountRepository.findByProfileRegisterIdAndGetDiscountForFriendId(
-                        orderAmount.getProfileRegisterId()
-                );
-                System.out.println("profileData: " + profileData);
-                if(profileData == null){
-                    System.out.println(" || ");
-                    OrderAmount dataStatusFalse = orderAmountRepository.save(orderAmount);
-                    System.out.println("dataStatusFalse" + dataStatusFalse);
-                    if (dataStatusFalse != null){
-                        System.out.println("save statusFalse");
-                        Integer update = orderAmountRepository.updateOrderAmountStatusFalse(
-                                orderAmount.getAmountOrder(),
-                                orderAmount.getProfileRegisterId()
-                        );
-                        System.out.println("update: " + update);
-                        if(update == 1){
-                            res.setStatus(1);
-                            res.setMessage("create status false success");
-                            res.setData(orderAmountRepository.findById(dataStatusFalse.getOrderAmountId()));
+            if(dataFriend != null){
+                if(orderAmount.getAmountOrder() >= dataDiscount.getMinimumAmount()){
+                    System.out.println("------------");
+                    System.out.println("conditions are correct");
+                    System.out.println("------------");
+                    OrderAmount checkOrder = orderAmountRepository.findByProfileRegisterIdAndDiscountForFriendId(
+                            orderAmount.getProfileRegisterId(),
+                            dataFriend.getDiscountForFriendId()
+                    );
+                    System.out.println("------checkOrder------" + checkOrder);
+                    if(checkOrder == null){
+                        OrderAmount dataStatusTrue = orderAmountRepository.save(orderAmount);
+                        System.out.println("dataStatusTrue" + dataStatusTrue);
+                        if (dataStatusTrue != null){
+                            System.out.println("save statusTrue");
+                            Integer update = orderAmountRepository.updateOrderAmountStatusTrue(
+                                    orderAmount.getAmountOrder(),
+                                    dataFriend.getDiscountForFriendId(),
+                                    orderAmount.getProfileRegisterId(),
+                                    orderAmount.getOrderAmountId()
+                            );
+                            System.out.println("update: " + update);
+                            System.out.println("dataStatusTrue.getOrderAmountId(): " + dataStatusTrue.getOrderAmountId());
+                            if(update == 1){
+                                res.setStatus(1);
+                                res.setMessage("create amount order success");
+                                res.setData(orderAmountRepository.findById(dataStatusTrue.getOrderAmountId()));
+                            }
                         }
                     }else {
-                        Integer update = orderAmountRepository.updateOrderAmountStatusFalse(
-                                orderAmount.getAmountOrder(),
-                                orderAmount.getProfileRegisterId()
-                        );
-                        System.out.println("update: " + update);
-                        if(update == 1){
-                            res.setStatus(1);
-                            res.setMessage("update amount_false success");
-                            res.setData(orderAmountRepository.findById(dataStatusFalse.getOrderAmountId()));
-                        }
+                        res.setStatus(0);
+                        res.setMessage("repeat");
                     }
                 }else {
-                    res.setStatus(0);
-                    res.setMessage("repeat");
+                    System.out.println("------------");
+                    System.out.println("The condition is not correct");
+                    System.out.println("------------");
+                    OrderAmount profileData = orderAmountRepository.findByProfileRegisterIdAndGetDiscountForFriendId(
+                            orderAmount.getProfileRegisterId()
+                    );
+                    System.out.println("profileData: " + profileData);
+                    if(profileData == null){
+                        System.out.println(" || ");
+                        OrderAmount dataStatusFalse = orderAmountRepository.save(orderAmount);
+                        System.out.println("dataStatusFalse" + dataStatusFalse);
+                        if (dataStatusFalse != null){
+                            System.out.println("save statusFalse");
+                            Integer update = orderAmountRepository.updateOrderAmountStatusFalse(
+                                    orderAmount.getAmountOrder(),
+                                    orderAmount.getProfileRegisterId()
+                            );
+                            System.out.println("update: " + update);
+                            if(update == 1){
+                                res.setStatus(1);
+                                res.setMessage("create status false success");
+                                res.setData(orderAmountRepository.findById(dataStatusFalse.getOrderAmountId()));
+                            }
+                        }else {
+                            Integer update = orderAmountRepository.updateOrderAmountStatusFalse(
+                                    orderAmount.getAmountOrder(),
+                                    orderAmount.getProfileRegisterId()
+                            );
+                            System.out.println("update: " + update);
+                            if(update == 1){
+                                res.setStatus(1);
+                                res.setMessage("update amount_false success");
+                                res.setData(orderAmountRepository.findById(dataStatusFalse.getOrderAmountId()));
+                            }
+                        }
+                    }else {
+                        res.setStatus(0);
+                        res.setMessage("repeat");
+                    }
+                }
+            }else {
+                System.out.println("dataFriend null: " + dataFriend);
+                OrderAmount dataStatusTrue = orderAmountRepository.save(orderAmount);
+                System.out.println("dataStatusTrue" + dataStatusTrue);
+                if (dataStatusTrue != null){
+                    System.out.println("save statusTrue");
+                    Integer update = orderAmountRepository.updateOrderAmountStatusTrueIsDiscountFalse(
+                            orderAmount.getAmountOrder(),
+                            orderAmount.getProfileRegisterId(),
+                            orderAmount.getOrderAmountId()
+                    );
+                    System.out.println("update: " + update);
+                    System.out.println("dataStatusTrue.getOrderAmountId(): " + dataStatusTrue.getOrderAmountId());
+                    if(update == 1){
+                        res.setStatus(1);
+                        res.setMessage("create amount order success");
+                        res.setData(orderAmountRepository.findById(dataStatusTrue.getOrderAmountId()));
+                    }
                 }
             }
         }catch (Exception err){

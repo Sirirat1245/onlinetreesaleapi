@@ -24,6 +24,13 @@ public interface OrderAmountRepository extends JpaRepository<OrderAmount, Intege
             @Param("profile_register_id") int profileRegisterId
     );
 
+    @Query(value = "SELECT * FROM order_amount " +
+            "WHERE profile_register_id = :profile_register_id " +
+            "AND discount_for_friend_id == 0", nativeQuery = true)
+    public OrderAmount findByProfileRegisterIdAndGetDiscountForFriendIdNull(
+            @Param("profile_register_id") int profileRegisterId
+    );
+
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE order_amount " +
@@ -35,6 +42,19 @@ public interface OrderAmountRepository extends JpaRepository<OrderAmount, Intege
             "AND order_amount_id = :order_amount_id")
     public Integer updateOrderAmountStatusTrue(@Param("amount_order") int amountOrder,
                                                @Param("discount_for_friend_id") int discountForFriendId,
+                                               @Param("profile_register_id") int profileRegisterId,
+                                               @Param("order_amount_id") int orderAmountId);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "UPDATE order_amount " +
+            "SET amount_order = :amount_order, " +
+            "discount_for_friend_id = 0, " +
+            "is_discount = 0, " +
+            "status = 1 " +
+            "WHERE profile_register_id = :profile_register_id " +
+            "AND order_amount_id = :order_amount_id")
+    public Integer updateOrderAmountStatusTrueIsDiscountFalse(@Param("amount_order") int amountOrder,
                                                @Param("profile_register_id") int profileRegisterId,
                                                @Param("order_amount_id") int orderAmountId);
 
