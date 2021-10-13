@@ -21,6 +21,7 @@ public class CollectProductAPIController {
 
     @PostMapping("/save")
     public Object create(CollectProduct collectProduct){
+        System.out.println("Input = "+collectProduct);
         APIResponse res = new APIResponse();
         try {
             System.out.println("collectProduct:" + collectProduct);
