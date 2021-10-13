@@ -109,6 +109,22 @@ public class CollectProductAPIController {
         return res;
     }
 
+    @PostMapping("/update_amount")
+    public Object updateAmountById(CollectProduct collectProduct){
+        APIResponse res = new APIResponse();
+        try {
+            Integer status= collectProductRepository.updateAmountById(collectProduct.getCollectProductId(),collectProduct.getAmount(),collectProduct.getPrice());
+            if(status ==1){
+                res.setStatus(1);
+                res.setMessage("update amount");
+            }
+        }catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("err : " + err.toString());
+        }
+        return res;
+    }
+
 
     @PostMapping("/delete")
     public Object delete(CollectProduct collectProduct){

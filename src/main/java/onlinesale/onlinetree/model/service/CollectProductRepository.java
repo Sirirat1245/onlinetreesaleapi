@@ -74,4 +74,11 @@ public interface CollectProductRepository extends JpaRepository<CollectProduct, 
     public List<CollectProduct> lstCollectProductByProfileRegisterIdAndIsStatus(
             @Param("profile_register_id") Integer profileRegisterId,
             @Param("is_status") Integer isStatus);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "UPDATE collect_product " +
+            "SET amount = :amount, price = :price " +
+            "WHERE collect_product_id = :collect_product_id")
+    public Integer updateAmountById(@Param("collect_product_id") Integer collectProductId, @Param("amount") Integer amount, @Param("price") Integer price);
 }

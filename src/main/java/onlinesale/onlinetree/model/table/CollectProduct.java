@@ -27,6 +27,9 @@ public class CollectProduct {
     @Column(name = "product_name")
     private String productName;
 
+    @Column(name = "product_price")
+    private Integer productPrice;
+
     @Column(name = "profile_register_id")
     private int profileRegisterId;
 
