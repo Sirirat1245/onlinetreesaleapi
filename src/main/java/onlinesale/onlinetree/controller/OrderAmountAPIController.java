@@ -220,4 +220,28 @@ public class OrderAmountAPIController {
         }
         return res;
     }
+
+    @PostMapping("/check_discount")
+    public Object checkDiscount(int discountForFriendId){
+        APIResponse res = new APIResponse();
+        try {
+            System.out.println("discountForFriend: " + discountForFriendId);
+            DiscountForFriend checkDiscount = discountForFriendRepository.findByDiscountForFriendId(
+                    discountForFriendId
+            );
+            System.out.println("checkDiscount: " + checkDiscount);
+            if(checkDiscount != null){
+                res.setStatus(1);
+                res.setMessage("show discount");
+                res.setData(checkDiscount);
+            }else {
+                res.setStatus(0);
+                res.setMessage("no discount");
+            }
+        }catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("error : " + err.toString());
+        }
+        return res;
+    }
 }
