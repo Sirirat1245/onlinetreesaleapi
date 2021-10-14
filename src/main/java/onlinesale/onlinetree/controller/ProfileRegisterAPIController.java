@@ -198,14 +198,22 @@ public class ProfileRegisterAPIController {
         return res;
     }
 
-    @PostMapping("/get_fullname")
-    public String getFullName(ProfileRegister profileRegister){
+    @PostMapping("/update_address")
+    public Object updateAddress(ProfileRegister profileRegister){
+        APIResponse res = new APIResponse();
         try{
-            System.out.println(profileRegister.getProfileRegisterId());
-            ProfileRegister detail = profileRegisterRepository.findByProfileRegisterId(profileRegister.getProfileRegisterId());
-            return detail.getFirstName()+" "+detail.getLastName();
+            Integer update = profileRegisterRepository.updateAddress(profileRegister.getProfileRegisterId(),profileRegister.getAddress());
+            if(update==1){
+                res.setStatus(1);
+                res.setMessage("update address");
+            }
         }catch (Exception err){
-            return "err : " + err.toString();
+            res.setStatus(-1);
+            res.setMessage("err : " + err.toString());
         }
+
+        return res;
     }
+
+
 }

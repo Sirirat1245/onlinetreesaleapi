@@ -47,6 +47,13 @@ public interface ProfileRegisterRepository extends JpaRepository<ProfileRegister
             "WHERE profile_register_id = :profile_register_id ")
     public Integer updateProfileRegisterByProfileRegisterId(@Param("profile_register_id") int profileRegisterId);
 
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "UPDATE profile_register " +
+            "SET address = :address " +
+            "WHERE profile_register_id = :profile_register_id")
+    public Integer updateAddress(@Param("profile_register_id") int profileRegisterId,@Param("address") String address);
+
     @Query(value = "SELECT * FROM profile_register " +
             "WHERE status = :status " +
             "AND user_type != 0", nativeQuery = true)
