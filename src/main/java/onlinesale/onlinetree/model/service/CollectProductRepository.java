@@ -89,7 +89,7 @@ public interface CollectProductRepository extends JpaRepository<CollectProduct, 
 
     @Query(value = "SELECT * FROM collect_product " +
             "WHERE profile_register_id = :profile_register_id " +
-            "AND is_status = :is_status", nativeQuery = true)
+            "AND is_status = :is_status AND status_buy = 0", nativeQuery = true)
     public List<CollectProduct> lstCollectProductByProfileRegisterIdAndIsStatus(
             @Param("profile_register_id") Integer profileRegisterId,
             @Param("is_status") Integer isStatus);
