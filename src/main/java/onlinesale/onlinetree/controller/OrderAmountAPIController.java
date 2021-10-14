@@ -104,6 +104,11 @@ public class OrderAmountAPIController {
                                 System.out.println("update: " + update);
                                 System.out.println("dataStatusTrue.getOrderAmountId(): " + dataStatusTrue.getOrderAmountId());
                                 if(update == 1){
+                                    Integer updateCollect = collectProductRepository.updateOrderAmountIdAndStatusBuyFalse(
+                                            orderAmount.getOrderAmountId(),
+                                            orderAmount.getProfileRegisterId()
+                                    );
+                                    System.out.println("updateCollect: " + updateCollect);
                                     res.setStatus(1);
                                     res.setMessage("create amount order success");
                                     res.setData(orderAmountRepository.findById(dataStatusTrue.getOrderAmountId()));
@@ -118,14 +123,17 @@ public class OrderAmountAPIController {
                             );
                             System.out.println("update: " + update);
                             if(update == 1){
+                                Integer updateCollect = collectProductRepository.updateOrderAmountIdAndStatusBuyFalse(
+                                        checkProfile.getOrderAmountId(),
+                                        orderAmount.getProfileRegisterId()
+                                );
+                                System.out.println("updateCollect: " + updateCollect);
                                 res.setStatus(1);
                                 res.setMessage("create amount order success");
                                 res.setData(orderAmountRepository.findById(checkProfile.getOrderAmountId()));
                             }
                         }
                     }else {
-
-
 //                        res.setStatus(0);
 //                        res.setMessage("repeat");
                         OrderAmount checkProfile = orderAmountRepository.findByProfileRegisterId(
@@ -140,6 +148,11 @@ public class OrderAmountAPIController {
 
                         System.out.println("update: " + update);
                         if(update == 1){
+                            Integer updateCollect = collectProductRepository.updateOrderAmountIdAndStatusBuyFalse(
+                                    checkProfile.getOrderAmountId(),
+                                    orderAmount.getProfileRegisterId()
+                            );
+                            System.out.println("updateCollect: " + updateCollect);
                             res.setStatus(1);
                             res.setMessage("create amount order success");
                             res.setData(orderAmountRepository.findById(checkProfile.getOrderAmountId()));
@@ -171,6 +184,11 @@ public class OrderAmountAPIController {
                                 );
                                 System.out.println("update: " + update);
                                 if(update == 1){
+                                    Integer updateCollect = collectProductRepository.updateOrderAmountIdAndStatusBuyFalse(
+                                            orderAmount.getOrderAmountId(),
+                                            orderAmount.getProfileRegisterId()
+                                    );
+                                    System.out.println("updateCollect: " + updateCollect);
                                     res.setStatus(1);
                                     res.setMessage("create status false success");
                                     res.setData(orderAmountRepository.findById(dataStatusFalse.getOrderAmountId()));
@@ -178,19 +196,45 @@ public class OrderAmountAPIController {
                             }
                         }else {
                             Integer update = orderAmountRepository.updateOrderAmountStatusFalse(
-                                    orderAmount.getAmountOrder(),
+                                    checkProfile.getAmountOrder(),
                                     orderAmount.getProfileRegisterId()
                             );
                             System.out.println("update: " + update);
                             if(update == 1){
+                                Integer updateCollect = collectProductRepository.updateOrderAmountIdAndStatusBuyFalse(
+                                        checkProfile.getOrderAmountId(),
+                                        orderAmount.getProfileRegisterId()
+                                );
+                                System.out.println("updateCollect: " + updateCollect);
                                 res.setStatus(1);
                                 res.setMessage("create status false success");
                                 res.setData(orderAmountRepository.findById(checkProfile.getOrderAmountId()));
                             }
                         }
                     }else {
-                        res.setStatus(0);
-                        res.setMessage("repeat");
+//                        res.setStatus(0);
+//                        res.setMessage("repeat");
+                        OrderAmount checkProfile = orderAmountRepository.findByProfileRegisterId(
+                                orderAmount.getProfileRegisterId());
+
+                        Integer update = orderAmountRepository.updateOrderAmountStatusTrue(
+                                orderAmount.getAmountOrder(),
+                                dataFriend.getDiscountForFriendId(),
+                                orderAmount.getProfileRegisterId(),
+                                checkProfile.getOrderAmountId()
+                        );
+
+                        System.out.println("update: " + update);
+                        if(update == 1){
+                            Integer updateCollect = collectProductRepository.updateOrderAmountIdAndStatusBuyFalse(
+                                    checkProfile.getOrderAmountId(),
+                                    orderAmount.getProfileRegisterId()
+                            );
+                            System.out.println("updateCollect: " + updateCollect);
+                            res.setStatus(1);
+                            res.setMessage("create status false success");
+                            res.setData(orderAmountRepository.findById(checkProfile.getOrderAmountId()));
+                        }
                     }
                 }
             }else {
@@ -212,6 +256,11 @@ public class OrderAmountAPIController {
                         System.out.println("update: " + update);
                         System.out.println("dataStatusTrue.getOrderAmountId(): " + dataStatusTrue.getOrderAmountId());
                         if(update == 1){
+                            Integer updateCollect = collectProductRepository.updateOrderAmountIdAndStatusBuyFalse(
+                                    orderAmount.getOrderAmountId(),
+                                    orderAmount.getProfileRegisterId()
+                            );
+                            System.out.println("updateCollect: " + updateCollect);
                             res.setStatus(1);
                             res.setMessage("create amount order success");
                             res.setData(orderAmountRepository.findById(dataStatusTrue.getOrderAmountId()));
@@ -226,6 +275,11 @@ public class OrderAmountAPIController {
                         );
                         System.out.println("update: " + update);
                         if(update == 1){
+                            Integer updateCollect = collectProductRepository.updateOrderAmountIdAndStatusBuyFalse(
+                                    checkProfile.getOrderAmountId(),
+                                    orderAmount.getProfileRegisterId()
+                            );
+                            System.out.println("updateCollect: " + updateCollect);
                             res.setStatus(1);
                             res.setMessage("update amount order success");
                             res.setData(orderAmountRepository.findById(checkProfile.getOrderAmountId()));
