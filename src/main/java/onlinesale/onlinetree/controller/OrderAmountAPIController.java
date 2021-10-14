@@ -124,8 +124,26 @@ public class OrderAmountAPIController {
                             }
                         }
                     }else {
-                        res.setStatus(0);
-                        res.setMessage("repeat");
+
+
+//                        res.setStatus(0);
+//                        res.setMessage("repeat");
+                        OrderAmount checkProfile = orderAmountRepository.findByProfileRegisterId(
+                                orderAmount.getProfileRegisterId());
+
+                        Integer update = orderAmountRepository.updateOrderAmountStatusTrue(
+                                orderAmount.getAmountOrder(),
+                                dataFriend.getDiscountForFriendId(),
+                                orderAmount.getProfileRegisterId(),
+                                checkProfile.getOrderAmountId()
+                        );
+
+                        System.out.println("update: " + update);
+                        if(update == 1){
+                            res.setStatus(1);
+                            res.setMessage("create amount order success");
+                            res.setData(orderAmountRepository.findById(checkProfile.getOrderAmountId()));
+                        }
                     }
                 }else {
                     System.out.println("------------");
