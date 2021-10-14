@@ -18,10 +18,11 @@ public class DealSale {
     private int dealSaleId;
 
     //from t.collectProduct เพื่อเช็คว่า product ที่เลือกเป็นอันไหน ใช้หรือยัง?
-    @Column(name = "collect_product_id")
-    private int collectProductId;
+//    @Column(name = "collect_product_id")
+//    private int collectProductId;
 
     @Column(name = "order_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int orderId;
 
     @Column(name = "order_amount_id")

@@ -89,30 +89,39 @@ public class DealSaleAPIController {
         return res;
     }
 
-//    @PostMapping("/save")
-//    public Object create(DealSale dealSale){
-//        APIResponse res = new APIResponse();
-//        try {
-//            DealSale _dealSale = dealSaleRepository.findByProfileRegisterIdAndOrderIdAndProductId(
-//                    dealSale.getProfileRegisterId(),
-//                    dealSale.getOrderId(),
-//                    dealSale.getProductId()
-//            );
-//            System.out.println("_dealSale:" + _dealSale);
-//            if(_dealSale == null){
-//                dealSaleRepository.save(dealSale);
-//                res.setStatus(1);
-//                res.setMessage("save");
-//                res.setData(dealSale);
-//            } else {
-//                res.setStatus(0);
-//                res.setMessage("duplicate");
-//                res.setData(_dealSale);
-//            }
-//        }catch (Exception err){
-//            res.setStatus(-1);
-//            res.setMessage("error : " + err.toString());
-//        }
-//        return res;
-//    }
+    @PostMapping("/save")
+    public Object create(DealSale dealSale){
+        APIResponse res = new APIResponse();
+        try {
+            DealSale _dealSale = dealSaleRepository.findByProfileRegisterIdAndOrderAmountId(
+                    dealSale.getProfileRegisterId(),
+                    dealSale.getOrderAmountId()
+            );
+            System.out.println("_dealSale:" + _dealSale);
+            if(_dealSale == null){
+                DealSale dealSaleData = dealSaleRepository.save(dealSale);
+                if (dealSaleData != null){
+                    res.setStatus(1);
+                    res.setMessage("save");
+                    res.setData(dealSale);
+
+                    Integer updateCollect = collectProductRepository.updateStatusBuyTrue(
+                            dealSale.getOrderAmountId(),
+                            dealSale.getProfileRegisterId()
+                    );
+
+                    System.out.println("updateCollect:" + updateCollect);
+                    System.out.println("updateCollect:" + updateCollect);
+                }
+            } else {
+                res.setStatus(0);
+                res.setMessage("duplicate");
+                res.setData(_dealSale);
+            }
+        }catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("error : " + err.toString());
+        }
+        return res;
+    }
 }

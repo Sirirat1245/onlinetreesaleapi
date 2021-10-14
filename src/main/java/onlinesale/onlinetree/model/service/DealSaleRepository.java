@@ -16,6 +16,11 @@ public interface DealSaleRepository extends JpaRepository<DealSale, Integer> {
 //            Integer productId
 //    );
 
+    public DealSale findByProfileRegisterIdAndOrderAmountId(
+            int profileRegisterId,
+            int orderAmountId
+    );
+
     @Query(value = "SELECT * FROM deal_sale " +
             "WHERE profile_register_id = :profile_register_id " +
             "AND order_amount_id = :order_amount_id", nativeQuery = true)
