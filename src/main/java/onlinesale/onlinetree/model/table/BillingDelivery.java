@@ -15,12 +15,23 @@ public class BillingDelivery {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int BillingDeliveryId;
 
+    @Column(name = "profile_register_id")
+    private int profileRegisterId;
+
     @Column(name = "order_id")
     private int orderId;
 
-    @Column(name = "delivery_status")
-    private String deliveryStatus;
+    @Column(name = "product_price")
+    private int productPrice;
 
+    @Column(name = "discount_price")
+    private int discountPrice;
+
+    // 0 = รอยืนยันจากแอดมิน (ใช้ครั้งแรกเมื่อกดยืนยัน รอแอดมินมาอนุมัติ), 1 = รอการชำระเเงิน, 2 = กำลังส่ง, 3 = ส่งแล้วสำเร็จ
+    @Column(name = "delivery_status")
+    private int deliveryStatus;
+
+    // 0 = false, 1 = true
     @Column(name = "pick_up_status")
     private boolean pickUpStatus;
 }
