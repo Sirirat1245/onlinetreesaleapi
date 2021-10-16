@@ -46,7 +46,7 @@ public class DealSale {
     @Column(name = "quantity")
     private int quantity;
 
-    //0 = true, 1 = false
+    //0 = false, 1 = true
     @Column(name = "status")
     private int status;
 

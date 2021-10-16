@@ -1,10 +1,7 @@
 package onlinesale.onlinetree.controller;
 
 import onlinesale.onlinetree.SmtpMailSender;
-import onlinesale.onlinetree.model.service.CollectProductRepository;
-import onlinesale.onlinetree.model.service.DealSaleRepository;
-import onlinesale.onlinetree.model.service.OrderAmountRepository;
-import onlinesale.onlinetree.model.service.PayForRepository;
+import onlinesale.onlinetree.model.service.*;
 import onlinesale.onlinetree.model.table.*;
 import org.hibernate.mapping.Table;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +29,9 @@ public class DealSaleAPIController {
 
     @Autowired
     private OrderAmountRepository orderAmountRepository;
+
+    @Autowired
+    private BillingDeliveryRepository billingDeliveryRepository;
 
     @Autowired
     private SmtpMailSender smtpMailSender;
@@ -224,6 +224,37 @@ public class DealSaleAPIController {
         } catch (Exception err){
             res.setStatus(-1);
             res.setMessage("err : " + err.toString());
+        }
+        return res;
+    }
+
+    //เมื่อ admin กดอนุมัติ ให้ไป update t.dealsale => status = true && t.billing => deliveryStatus = 1 รอการชำระเงิน
+    @PostMapping("/admin_approve")
+    public Object adminApprove(DealSale dealSale){
+        APIResponse res = new APIResponse();
+        try {
+            DealSale _dealSale = dealSaleRepository.findByProfileRegisterIdAndOrderAmountId(
+                    dealSale.getProfileRegisterId(),
+                    dealSale.getOrderAmountId()
+            );
+            System.out.println("_dealSale:" + _dealSale);
+            if(_dealSale != null){
+                    Integer updateApprove = dealSaleRepository.adminUpdateStatusTrue(
+                            dealSale.getProfileRegisterId(),
+                            dealSale.getOrderAmountId()
+                    );
+                    System.out.println("updateApprove:" + updateApprove);
+                    Integer updateBilling = billingDeliveryRepository.updateDeliveryStatusTrue(
+                            dealSale.getProfileRegisterId(),
+                            dealSale.getOrderId()
+                    );
+                    System.out.println("updateCollect:" + updateBilling);
+                    res.setStatus(1);
+                    res.setMessage("อนุมัติคำสั่งซื้อสำเร็จ");
+            }
+        }catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("error : " + err.toString());
         }
         return res;
     }
