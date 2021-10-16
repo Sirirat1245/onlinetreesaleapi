@@ -18,6 +18,8 @@ public interface PayForRepository extends JpaRepository<PayFor, Integer> {
     public PayFor findByOrderId(String orderId);
 
     public PayFor findByPayForId(Integer payForId);
+
+    public PayFor findByProfileRegisterIdAndOrderId(int profileRegisterId, String orderId);
 //
 //    public List<PayFor> findByProfileRegisterId(Integer profileRegisterId);
 //

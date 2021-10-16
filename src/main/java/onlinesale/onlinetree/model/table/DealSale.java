@@ -50,9 +50,9 @@ public class DealSale {
     @Column(name = "status")
     private int status;
 
-    //0 = true, 1 = false
+    //0 = false, 1 = true
     @Column(name = "cancel")
-    private int cancel;
+    private String cancel;
 
     @Column(name = "order_date")
     private LocalDateTime orderDate = LocalDateTime.now(ZoneId.of("UTC+07:00"));

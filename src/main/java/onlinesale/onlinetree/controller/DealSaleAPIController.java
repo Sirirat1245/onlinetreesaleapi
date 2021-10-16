@@ -4,10 +4,8 @@ import onlinesale.onlinetree.SmtpMailSender;
 import onlinesale.onlinetree.model.service.CollectProductRepository;
 import onlinesale.onlinetree.model.service.DealSaleRepository;
 import onlinesale.onlinetree.model.service.OrderAmountRepository;
-import onlinesale.onlinetree.model.table.CollectProduct;
-import onlinesale.onlinetree.model.table.DealSale;
-import onlinesale.onlinetree.model.table.OrderAmount;
-import onlinesale.onlinetree.model.table.ProductComment;
+import onlinesale.onlinetree.model.service.PayForRepository;
+import onlinesale.onlinetree.model.table.*;
 import org.hibernate.mapping.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,6 +20,9 @@ import java.util.*;
 @RestController
 @RequestMapping("/deal_sale")
 public class DealSaleAPIController {
+
+    @Autowired
+    private PayForRepository payForRepository;
 
     @Autowired
     private DealSaleRepository dealSaleRepository;
@@ -150,6 +151,47 @@ public class DealSaleAPIController {
                 res.setStatus(0);
                 res.setMessage("duplicate");
                 res.setData(_dealSale);
+            }
+        }catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("error : " + err.toString());
+        }
+        return res;
+    }
+
+    //เช็ค t.payfor ด้วย ว่าสร้างยัง ถ้าสร้างแล้วจะไม่สามารถยกเลิกได้
+    @PostMapping("/cancel")
+    public Object cancel(DealSale dealSale){
+        APIResponse res = new APIResponse();
+        try {
+            DealSale _dealSale = dealSaleRepository.findByProfileRegisterIdAndOrderAmountId(
+                    dealSale.getProfileRegisterId(),
+                    dealSale.getOrderAmountId()
+            );
+            System.out.println("_dealSale:" + _dealSale);
+            if(_dealSale != null){
+                    PayFor checkPayFor = payForRepository.findByProfileRegisterIdAndOrderId(
+                            dealSale.getProfileRegisterId(),
+                            dealSale.getOrderId()
+                    );
+                    System.out.println("checkPayFor:" + checkPayFor);
+                    if(checkPayFor != null){
+                        res.setStatus(0);
+                        res.setMessage("ไม่สามารถยกเลิกคำสั่งซื้อได้ เนื่องจากมีการชำระเงินแล้ว");
+                    }else {
+                        Integer updateCancel = dealSaleRepository.updateDealSaleCancel(
+                                dealSale.getProfileRegisterId(),
+                                dealSale.getOrderId()
+                        );
+                        System.out.println("updateCancel:" + updateCancel);
+                        Integer updateCollect = collectProductRepository.updateCollectProductForCancelDealSale(
+                                dealSale.getOrderAmountId(),
+                                dealSale.getProfileRegisterId()
+                        );
+                        System.out.println("updateCollect:" + updateCollect);
+                        res.setStatus(1);
+                        res.setMessage("ยกเลิกคำสั่งซื้อสำเร็จ");
+                    }
             }
         }catch (Exception err){
             res.setStatus(-1);
