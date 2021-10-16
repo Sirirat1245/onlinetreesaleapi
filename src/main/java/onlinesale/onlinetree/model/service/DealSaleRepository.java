@@ -30,6 +30,11 @@ public interface DealSaleRepository extends JpaRepository<DealSale, Integer> {
             @Param("profile_register_id") Integer profileRegisterId,
             @Param("order_amount_id") Integer orderAmountId);
 
+    @Query(value = "SELECT * FROM deal_sale " +
+            "WHERE status = :status", nativeQuery = true)
+    public List<DealSale> lstDealSaleByStatus(
+            @Param("status") int status);
+
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = "INSERT INTO deal_sale(" +

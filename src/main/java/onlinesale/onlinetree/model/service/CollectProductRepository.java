@@ -76,7 +76,16 @@ public interface CollectProductRepository extends JpaRepository<CollectProduct, 
             "WHERE order_amount_id = :order_amount_id " +
             "AND profile_register_id = :profile_register_id")
     public Integer updateStatusBuyTrue(@Param("order_amount_id") Integer orderAmountId,
-                                                        @Param("profile_register_id") Integer profileRegisterId);
+                                       @Param("profile_register_id") Integer profileRegisterId);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "UPDATE collect_product " +
+            "SET is_status = 0 " +
+            "WHERE order_amount_id = :order_amount_id " +
+            "AND profile_register_id = :profile_register_id")
+    public Integer updateIsStatusFalse(@Param("order_amount_id") Integer orderAmountId,
+                                       @Param("profile_register_id") Integer profileRegisterId);
 
     @Transactional
     @Modifying(clearAutomatically = true)

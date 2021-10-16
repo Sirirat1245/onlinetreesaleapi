@@ -144,8 +144,13 @@ public class DealSaleAPIController {
                             orderAmountId,
                             profileRegisterId
                     );
+//                    Integer updateLastCollect = collectProductRepository.updateIsStatusFalse(
+//                            orderAmountId,
+//                            profileRegisterId
+//                    );
 
                     System.out.println("updateCollect:" + updateCollect);
+//                    System.out.println("updateLastCollect:" + updateLastCollect);
                 }
             } else {
                 res.setStatus(0);
@@ -196,6 +201,29 @@ public class DealSaleAPIController {
         }catch (Exception err){
             res.setStatus(-1);
             res.setMessage("error : " + err.toString());
+        }
+        return res;
+    }
+
+    //api list ยืนยันคำสั่งซื้อของ user ที่หน้าแอดมิน by status false or status true => t.dealsale
+    @PostMapping("/list_status")
+    public Object list(DealSale dealSale){
+        APIResponse res = new APIResponse();
+        try {
+            List lstData = dealSaleRepository.lstDealSaleByStatus(
+                    dealSale.getStatus()
+            );
+            if (lstData == null){
+                res.setStatus(0);
+                res.setMessage("don't have dealsale");
+            } else {
+                res.setStatus(1);
+                res.setMessage("show list");
+                res.setData(lstData);
+            }
+        } catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("err : " + err.toString());
         }
         return res;
     }
