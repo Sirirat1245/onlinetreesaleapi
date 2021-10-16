@@ -44,7 +44,7 @@ public class PayFor {
     private Double payForPrice;
 
     @Column(name = "order_id")
-    private int orderId;
+    private String orderId;
 
     @Column(name = "profile_register_id")
     private int profileRegisterId;

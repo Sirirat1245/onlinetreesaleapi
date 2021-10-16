@@ -19,7 +19,7 @@ public class BillingDelivery {
     private int profileRegisterId;
 
     @Column(name = "order_id")
-    private int orderId;
+    private String orderId;
 
     @Column(name = "product_price")
     private int productPrice;

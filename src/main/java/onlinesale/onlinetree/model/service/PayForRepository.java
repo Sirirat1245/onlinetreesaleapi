@@ -15,7 +15,7 @@ import java.util.List;
 
 public interface PayForRepository extends JpaRepository<PayFor, Integer> {
 
-    public PayFor findByOrderId(Integer orderId);
+    public PayFor findByOrderId(String orderId);
 
     public PayFor findByPayForId(Integer payForId);
 //
@@ -54,5 +54,5 @@ public interface PayForRepository extends JpaRepository<PayFor, Integer> {
                                          @Param("date_time") LocalDateTime dateTime,
                                          @Param("pay_for_id") Integer payForId,
                                          @Param("profile_register_id") Integer profileRegisterId,
-                                         @Param("order_id") Integer orderId);
+                                         @Param("order_id") String orderId);
 }

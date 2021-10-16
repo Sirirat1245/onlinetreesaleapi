@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface BillingDeliveryRepository extends JpaRepository<BillingDelivery, Integer> {
 
-    public BillingDelivery findByProfileRegisterIdAndOrderId(int profileRegisterId, int orderId);
+    public BillingDelivery findByProfileRegisterIdAndOrderId(int profileRegisterId, String orderId);
 
     @Transactional
     @Modifying(clearAutomatically = true)
@@ -26,6 +26,6 @@ public interface BillingDeliveryRepository extends JpaRepository<BillingDelivery
                                          @Param("delivery_status") int deliveryStatus,
                                          @Param("pick_up_status") boolean pickUpStatus,
                                          @Param("profile_register_id") int profileRegisterId,
-                                         @Param("order_id") int orderId);
+                                         @Param("order_id") String orderId);
 
 }
