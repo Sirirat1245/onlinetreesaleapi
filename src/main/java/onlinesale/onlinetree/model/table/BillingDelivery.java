@@ -27,7 +27,7 @@ public class BillingDelivery {
     @Column(name = "discount_price")
     private int discountPrice;
 
-    // 0 = รอยืนยันจากแอดมิน (ใช้ครั้งแรกเมื่อกดยืนยัน รอแอดมินมาอนุมัติ), 1 = รอการชำระเเงิน, 2 = กำลังส่ง, 3 = ส่งแล้วสำเร็จ
+    // 0 = รอยืนยันจากแอดมิน (ใช้ครั้งแรกเมื่อกดยืนยัน รอแอดมินมาอนุมัติ), 1 = รอการชำระเเงิน, 2 = เตรียมจัดส่ง, 3 = ส่งแล้วสำเร็จ
     @Column(name = "delivery_status")
     private int deliveryStatus;
 

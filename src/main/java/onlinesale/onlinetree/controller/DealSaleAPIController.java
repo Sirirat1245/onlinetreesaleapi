@@ -8,13 +8,15 @@ import onlinesale.onlinetree.model.table.CollectProduct;
 import onlinesale.onlinetree.model.table.DealSale;
 import onlinesale.onlinetree.model.table.OrderAmount;
 import onlinesale.onlinetree.model.table.ProductComment;
+import org.hibernate.mapping.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.security.SecureRandom;
+import java.util.*;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -90,27 +92,58 @@ public class DealSaleAPIController {
     }
 
     @PostMapping("/save")
-    public Object create(DealSale dealSale){
+    public Object create(int orderAmountId,
+                         int profileRegisterId,
+                         String profileAddress,
+                         int productPrice,
+                         int discountPrice,
+                         int quantity,
+                         int status,
+                         int cancel){
         APIResponse res = new APIResponse();
         try {
             DealSale _dealSale = dealSaleRepository.findByProfileRegisterIdAndOrderAmountId(
-                    dealSale.getProfileRegisterId(),
-                    dealSale.getOrderAmountId()
+                    profileRegisterId,
+                    orderAmountId
             );
             System.out.println("_dealSale:" + _dealSale);
+
+            String chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijk"
+                    +"lmnopqrstuvwxyz!@#$%&";
+            Random rnd = new Random();
+            int len = 6;
+            StringBuilder orderId = new StringBuilder(len);
+            for (int i = 0; i < len; i++)
+                orderId.append(chars.charAt(rnd.nextInt(chars.length())));
+            System.out.println("sb:" + orderId);
+
+//            HashMap<String, String> hash_map = new HashMap<String, String>();
+//            hash_map.put("orderId", sb.toString());
+//            System.out.println("hash_map:" + hash_map);
+
             if(_dealSale == null){
-                DealSale dealSaleData = dealSaleRepository.save(dealSale);
+                DealSale dealSaleData = dealSaleRepository.saveDealSaleWithCondition(
+                        orderId.toString(),
+                        orderAmountId,
+                        profileRegisterId,
+                        profileAddress,
+                        productPrice,
+                        discountPrice,
+                        quantity,
+                        status,
+                        cancel
+                );
+                System.out.println("dealSaleData:" + dealSaleData);
                 if (dealSaleData != null){
                     res.setStatus(1);
                     res.setMessage("save");
-                    res.setData(dealSale);
+                    res.setData(dealSaleData);
 
                     Integer updateCollect = collectProductRepository.updateStatusBuyTrue(
-                            dealSale.getOrderAmountId(),
-                            dealSale.getProfileRegisterId()
+                            orderAmountId,
+                            profileRegisterId
                     );
 
-                    System.out.println("updateCollect:" + updateCollect);
                     System.out.println("updateCollect:" + updateCollect);
                 }
             } else {

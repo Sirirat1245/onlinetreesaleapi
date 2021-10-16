@@ -22,8 +22,7 @@ public class DealSale {
 //    private int collectProductId;
 
     @Column(name = "order_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int orderId;
+    private String orderId;
 
     @Column(name = "order_amount_id")
     private int orderAmountId;
@@ -51,6 +50,7 @@ public class DealSale {
     @Column(name = "status")
     private int status;
 
+    //0 = true, 1 = false
     @Column(name = "cancel")
     private int cancel;
 
