@@ -298,4 +298,18 @@ public class DealSaleAPIController {
         }
         return res;
     }
+
+    @PostMapping("list_all")
+    public Object listAll(DealSale dealSale){
+        APIResponse res = new APIResponse();
+        try{
+            res.setStatus(1);
+            res.setMessage("list all");
+            res.setData(dealSaleRepository.findAll());
+        }catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("error : " + err.toString());
+        }
+        return res;
+    }
 }

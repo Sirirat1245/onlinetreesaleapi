@@ -68,4 +68,18 @@ public class BillingDeliveryAPIController {
         }
         return res;
     }
+
+    @PostMapping("/list_by_profile")
+    public Object listByProfileRegisterId(BillingDelivery billingDelivery){
+        APIResponse res = new APIResponse();
+        try{
+            res.setStatus(1);
+            res.setMessage("list");
+            res.setData(billingDeliveryRepository.findByProfileRegisterId(billingDelivery.getProfileRegisterId()));
+        }catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("error : " + err.toString());
+        }
+        return res;
+    }
 }

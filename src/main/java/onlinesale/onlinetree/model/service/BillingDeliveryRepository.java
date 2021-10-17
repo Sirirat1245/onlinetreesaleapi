@@ -8,9 +8,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface BillingDeliveryRepository extends JpaRepository<BillingDelivery, Integer> {
 
     public BillingDelivery findByProfileRegisterIdAndOrderId(int profileRegisterId, String orderId);
+    public List<BillingDelivery> findByProfileRegisterId(Integer profileRegisterId);
 
     @Transactional
     @Modifying(clearAutomatically = true)
