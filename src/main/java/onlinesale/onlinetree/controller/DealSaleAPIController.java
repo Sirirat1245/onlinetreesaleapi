@@ -92,71 +92,111 @@ public class DealSaleAPIController {
         return res;
     }
 
-    @PostMapping("/save")
-    public Object create(int orderAmountId,
-                         int profileRegisterId,
-                         String profileAddress,
-                         int productPrice,
-                         int discountPrice,
-                         int quantity,
-                         int status,
-                         int cancel){
-        APIResponse res = new APIResponse();
-        try {
-            DealSale _dealSale = dealSaleRepository.findByProfileRegisterIdAndOrderAmountId(
-                    profileRegisterId,
-                    orderAmountId
-            );
-            System.out.println("_dealSale:" + _dealSale);
-
-            String chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijk"
-                    +"lmnopqrstuvwxyz!@#$%&";
-            Random rnd = new Random();
-            int len = 6;
-            StringBuilder orderId = new StringBuilder(len);
-            for (int i = 0; i < len; i++)
-                orderId.append(chars.charAt(rnd.nextInt(chars.length())));
-            System.out.println("sb:" + orderId);
-
-//            HashMap<String, String> hash_map = new HashMap<String, String>();
-//            hash_map.put("orderId", sb.toString());
-//            System.out.println("hash_map:" + hash_map);
-
-            if(_dealSale == null){
-                DealSale dealSaleData = dealSaleRepository.saveDealSaleWithCondition(
-                        orderId.toString(),
-                        orderAmountId,
-                        profileRegisterId,
-                        profileAddress,
-                        productPrice,
-                        discountPrice,
-                        quantity,
-                        status,
-                        cancel
-                );
-                System.out.println("dealSaleData:" + dealSaleData);
-                if (dealSaleData != null){
-                    res.setStatus(1);
-                    res.setMessage("save");
-                    res.setData(dealSaleData);
-
-                    Integer updateCollect = collectProductRepository.updateStatusBuyTrue(
-                            orderAmountId,
-                            profileRegisterId
-                    );
-//                    Integer updateLastCollect = collectProductRepository.updateIsStatusFalse(
+//    @PostMapping("/save")
+//    public Object create(int orderAmountId,
+//                         int profileRegisterId,
+//                         String profileAddress,
+//                         int productPrice,
+//                         int discountPrice,
+//                         int quantity,
+//                         int status,
+//                         int cancel){
+//        APIResponse res = new APIResponse();
+//        try {
+//            DealSale _dealSale = dealSaleRepository.findByProfileRegisterIdAndOrderAmountId(
+//                    profileRegisterId,
+//                    orderAmountId
+//            );
+//            System.out.println("_dealSale:" + _dealSale);
+//
+//            String chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%&";
+//            Random rnd = new Random();
+//            int len = 6;
+//            StringBuilder orderId = new StringBuilder(len);
+//            for (int i = 0; i < len; i++)
+//                orderId.append(chars.charAt(rnd.nextInt(chars.length())));
+//            System.out.println("sb:" + orderId);
+//
+////            HashMap<String, String> hash_map = new HashMap<String, String>();
+////            hash_map.put("orderId", sb.toString());
+////            System.out.println("hash_map:" + hash_map);
+//
+//            if(_dealSale == null){
+//                DealSale dealSaleData = dealSaleRepository.saveDealSaleWithCondition(
+//                        orderId.toString(),
+//                        orderAmountId,
+//                        profileRegisterId,
+//                        profileAddress,
+//                        productPrice,
+//                        discountPrice,
+//                        quantity,
+//                        status,
+//                        cancel
+//                );
+//                System.out.println("dealSaleData:" + dealSaleData);
+//                if (dealSaleData != null){
+//                    res.setStatus(1);
+//                    res.setMessage("save");
+//                    res.setData(dealSaleData);
+//
+//                    Integer updateCollect = collectProductRepository.updateStatusBuyTrue(
 //                            orderAmountId,
 //                            profileRegisterId
 //                    );
+////                    Integer updateLastCollect = collectProductRepository.updateIsStatusFalse(
+////                            orderAmountId,
+////                            profileRegisterId
+////                    );
+//
+//                    System.out.println("updateCollect:" + updateCollect);
+////                    System.out.println("updateLastCollect:" + updateLastCollect);
+//                }
+//            } else {
+//                res.setStatus(0);
+//                res.setMessage("duplicate");
+//                res.setData(_dealSale);
+//            }
+//        }catch (Exception err){
+//            res.setStatus(-1);
+//            res.setMessage("error : " + err.toString());
+//        }
+//        return res;
+//    }
 
-                    System.out.println("updateCollect:" + updateCollect);
-//                    System.out.println("updateLastCollect:" + updateLastCollect);
-                }
-            } else {
+    @PostMapping("/save")
+    public Object save(DealSale dealSale){
+        APIResponse res = new APIResponse();
+        try {
+            DealSale _dealSale = dealSaleRepository.findByProfileRegisterIdAndOrderAmountId(
+                    dealSale.getProfileRegisterId(),
+                    dealSale.getOrderAmountId()
+            );
+            System.out.println("_dealSale:" + _dealSale);
+            if(_dealSale == null){
+                String chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%&";
+                Random rnd = new Random();
+                int len = 6;
+                StringBuilder orderId = new StringBuilder(len);
+                for (int i = 0; i < len; i++) orderId.append(chars.charAt(rnd.nextInt(chars.length())));
+                dealSale.setOrderId(orderId.toString());
+                System.out.println("sb:" + dealSale.getOrderId());
+                DealSale data= dealSaleRepository.save(dealSale);
+                    if (data != null) {
+                        res.setStatus(1);
+                        res.setMessage("save");
+                        res.setData(data);
+                        Integer updateCollect = collectProductRepository.updateStatusBuyTrue(
+                                dealSale.getOrderAmountId(),
+                                dealSale.getProfileRegisterId()
+                        );
+                        System.out.println("updateCollect:" + updateCollect);
+                    }
+            }else{
                 res.setStatus(0);
                 res.setMessage("duplicate");
                 res.setData(_dealSale);
             }
+
         }catch (Exception err){
             res.setStatus(-1);
             res.setMessage("error : " + err.toString());
