@@ -133,4 +133,26 @@ public class PayForAPIController {
         }
         return res;
     }
+
+    @PostMapping("/list_is_status")
+    public Object listIsStatus(PayFor payFor){
+        APIResponse res = new APIResponse();
+        try {
+            List lstData = payForRepository.lstPayForByIsPayForStatus(
+                    payFor.getIsPayForStatus()
+            );
+            if (lstData == null){
+                res.setStatus(0);
+                res.setMessage("don't have payFor");
+            } else {
+                res.setStatus(1);
+                res.setMessage("show list");
+                res.setData(lstData);
+            }
+        } catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("err : " + err.toString());
+        }
+        return res;
+    }
 }

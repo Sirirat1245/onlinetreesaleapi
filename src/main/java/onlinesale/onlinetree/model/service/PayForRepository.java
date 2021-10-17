@@ -1,6 +1,7 @@
 package onlinesale.onlinetree.model.service;
 
 import onlinesale.onlinetree.model.table.CategoryProduct;
+import onlinesale.onlinetree.model.table.CollectProduct;
 import onlinesale.onlinetree.model.table.PayFor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -57,4 +58,9 @@ public interface PayForRepository extends JpaRepository<PayFor, Integer> {
                                          @Param("pay_for_id") Integer payForId,
                                          @Param("profile_register_id") Integer profileRegisterId,
                                          @Param("order_id") String orderId);
+
+    @Query(value = "SELECT * FROM pay_for " +
+            "WHERE is_pay_for_status = :is_pay_for_status", nativeQuery = true)
+    public List<PayFor> lstPayForByIsPayForStatus(
+            @Param("is_pay_for_status") Boolean isPayForStatus);
 }
