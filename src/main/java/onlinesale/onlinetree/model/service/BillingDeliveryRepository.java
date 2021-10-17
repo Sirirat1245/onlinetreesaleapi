@@ -37,4 +37,13 @@ public interface BillingDeliveryRepository extends JpaRepository<BillingDelivery
     public Integer updateDeliveryStatusTrue(@Param("profile_register_id") int profileRegisterId,
                                             @Param("order_id") String orderId);
 
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "UPDATE billing_delivery " +
+            "SET delivery_status = 2 " +
+            "WHERE profile_register_id = :profile_register_id " +
+            "AND order_id = :order_id")
+    public Integer updateDeliveryStatusPrepareToShip(@Param("profile_register_id") int profileRegisterId,
+                                            @Param("order_id") String orderId);
+
 }

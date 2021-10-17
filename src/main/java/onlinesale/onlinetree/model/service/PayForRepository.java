@@ -46,7 +46,7 @@ public interface PayForRepository extends JpaRepository<PayFor, Integer> {
             "WHERE pay_for_id = :pay_for_id " +
             "AND profile_register_id = :profile_register_id " +
             "AND order_id = :order_id")
-    public Integer updateCategoryProduct(@Param("is_pay_for_status") Boolean isPayForStatus,
+    public Integer updatePayFor(@Param("is_pay_for_status") Boolean isPayForStatus,
                                          @Param("transfer_slip") String transferSlip,
                                          @Param("pay_for_day") String payForDay,
                                          @Param("pay_for_time") String payForTime,
@@ -63,4 +63,13 @@ public interface PayForRepository extends JpaRepository<PayFor, Integer> {
             "WHERE is_pay_for_status = :is_pay_for_status", nativeQuery = true)
     public List<PayFor> lstPayForByIsPayForStatus(
             @Param("is_pay_for_status") Boolean isPayForStatus);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "UPDATE pay_for " +
+            "SET is_pay_for_status = true " +
+            "WHERE pay_for_id = :pay_for_id " +
+            "AND profile_register_id = :profile_register_id")
+    public Integer approvePayFor(@Param("pay_for_id") Integer payForId,
+                                 @Param("profile_register_id") Integer profileRegisterId);
 }

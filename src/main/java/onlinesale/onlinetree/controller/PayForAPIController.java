@@ -1,5 +1,6 @@
 package onlinesale.onlinetree.controller;
 
+import onlinesale.onlinetree.model.service.BillingDeliveryRepository;
 import onlinesale.onlinetree.model.service.PayForRepository;
 import onlinesale.onlinetree.model.table.PayFor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,16 @@ public class PayForAPIController {
     @Autowired
     private PayForRepository payForRepository;
 
+    @Autowired
+    private BillingDeliveryRepository billingDeliveryRepository;
+
     @PostMapping("/save")
     public Object create(PayFor payFor){
         APIResponse res = new APIResponse();
         try {
             System.out.println("*********payFor**********" + payFor);
             PayFor _payFor = payForRepository.findByOrderId(payFor.getOrderId());
-            System.out.println("*********_catProduct**********" + _payFor);
+            System.out.println("*********_payFor**********" + _payFor);
             if(_payFor == null){
                 payForRepository.save(payFor);
                 res.setStatus(1);
@@ -52,7 +56,7 @@ public class PayForAPIController {
         APIResponse res = new APIResponse();
         try {
             System.out.println("payFor : " + payFor);
-            Integer status = payForRepository.updateCategoryProduct(
+            Integer status = payForRepository.updatePayFor(
                     payFor.getIsPayForStatus(),
                     payFor.getTransferSlip(),
                     payFor.getPayForDay(),
@@ -148,6 +152,34 @@ public class PayForAPIController {
                 res.setStatus(1);
                 res.setMessage("show list");
                 res.setData(lstData);
+            }
+        } catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("err : " + err.toString());
+        }
+        return res;
+    }
+
+    //ถ้าแอดมินยืนยันแล้ว ให้ไป set t.payfor => payForStatus = true && deliveryStatus => t.billing เตรียมจัดส่ง
+    @PostMapping("/approve_pay_for")
+    public Object approvePayFor(PayFor payFor){
+        APIResponse res = new APIResponse();
+        try {
+            System.out.println("payFor : " + payFor);
+            Integer status = payForRepository.approvePayFor(
+                    payFor.getPayForId(),
+                    payFor.getProfileRegisterId()
+            );
+            System.out.println("status : " + status);
+            if(status == 1){
+                Integer billingUpdate = billingDeliveryRepository.updateDeliveryStatusPrepareToShip(
+                        payFor.getPayForId(),
+                        payFor.getOrderId()
+                );
+                System.out.println("billingUpdate : " + billingUpdate);
+                res.setStatus(1);
+                res.setMessage("approve payFor success");
+                res.setData(payForRepository.findByPayForId(payFor.getPayForId()));
             }
         } catch (Exception err){
             res.setStatus(-1);
