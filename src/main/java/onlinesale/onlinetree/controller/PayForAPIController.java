@@ -47,7 +47,11 @@ public class PayForAPIController {
                     System.out.println("file not found!");
                 }
                 /* End file transfer */
-
+                Integer billingUpdate = billingDeliveryRepository.updateDeliveryStatusWaitApprove(
+                        payFor.getProfileRegisterId(),
+                        payFor.getOrderId()
+                );
+                System.out.println("update billing wait approve: " + billingUpdate);
                 payForRepository.save(payFor);
                 res.setStatus(1);
                 res.setMessage("save");
