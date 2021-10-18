@@ -1,5 +1,6 @@
 package onlinesale.onlinetree.controller;
 
+import onlinesale.onlinetree.config.Config;
 import onlinesale.onlinetree.model.service.BillingDeliveryRepository;
 import onlinesale.onlinetree.model.service.PayForRepository;
 import onlinesale.onlinetree.model.table.PayFor;
@@ -8,11 +9,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 import java.util.Properties;
 
@@ -28,13 +28,26 @@ public class PayForAPIController {
     private BillingDeliveryRepository billingDeliveryRepository;
 
     @PostMapping("/save")
-    public Object create(PayFor payFor){
+    public Object create(PayFor payFor, @RequestParam(value = "file",required = false) MultipartFile file){
         APIResponse res = new APIResponse();
+        Config conf = new Config();
         try {
             System.out.println("*********payFor**********" + payFor);
             PayFor _payFor = payForRepository.findByOrderId(payFor.getOrderId());
             System.out.println("*********_payFor**********" + _payFor);
             if(_payFor == null){
+                /* File transfer */
+                if(file != null){
+                    new File(conf.getStorePath()+"slip").mkdirs();
+                    File fileToSave = new File(conf.getStorePath()+"slip\\"+payFor.getOrderId()+".png");
+                    file.transferTo(fileToSave);
+                    System.out.println("save file success");
+                    payFor.setTransferSlip(payFor.getOrderId()+".png");
+                }else{
+                    System.out.println("file not found!");
+                }
+                /* End file transfer */
+
                 payForRepository.save(payFor);
                 res.setStatus(1);
                 res.setMessage("save");
