@@ -18,6 +18,9 @@ public interface ProfileRegisterRepository extends JpaRepository<ProfileRegister
 
     public ProfileRegister findByProfileRegisterId(int ProfileRegisterId);
 
+    @Query(value = "select * from profile_register where my_code = :my_code",nativeQuery = true)
+    public ProfileRegister findByMyCode(@Param("my_code") String myCode);
+
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE profile_register " +
