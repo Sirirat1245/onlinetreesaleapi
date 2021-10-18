@@ -190,7 +190,7 @@ public class PayForAPIController {
             System.out.println("status : " + status);
             if(status == 1){
                 Integer billingUpdate = billingDeliveryRepository.updateDeliveryStatusPrepareToShip(
-                        payFor.getPayForId(),
+                        payFor.getProfileRegisterId(),
                         payFor.getOrderId()
                 );
                 System.out.println("billingUpdate : " + billingUpdate);
