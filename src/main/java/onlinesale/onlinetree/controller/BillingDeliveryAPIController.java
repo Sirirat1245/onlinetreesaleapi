@@ -82,4 +82,27 @@ public class BillingDeliveryAPIController {
         }
         return res;
     }
+
+    @PostMapping("/pickup")
+    public Object pickup(BillingDelivery billingDelivery){
+        APIResponse res = new APIResponse();
+        try {
+            Integer updateData = billingDeliveryRepository.updatePickup(
+                    billingDelivery.getProfileRegisterId(),
+                    billingDelivery.getOrderId()
+            );
+            System.out.println("updateData :" + updateData);
+            if(updateData == 1){
+                res.setStatus(1);
+                res.setMessage("update pickup success");
+            }else {
+                res.setStatus(0);
+                res.setMessage("update pickup failed");
+            }
+        }catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("error : " + err.toString());
+        }
+        return res;
+    }
 }

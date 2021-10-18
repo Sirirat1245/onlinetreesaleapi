@@ -24,6 +24,7 @@ public class FriendGetFriendAPIController {
     @Autowired
     private DiscountForFriendRepository discountForFriendRepository;
 
+    //check ui ถ้ามีการกรอกโค้ด ให้มายิงที่ api นี้ด้วย
     //สร้างตอนที่ ผู้ถูกชวน active ที่ T.profileRegister
     //ส่ง status from T.profileRegister มาเพื่อเช็คว่า profile คนนั้น active ยัง
     //ถ้า statusFriend = 0 ถึงจะ save ได้
