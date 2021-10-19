@@ -217,4 +217,18 @@ public class PayForAPIController {
         }
         return res;
     }
+
+    @PostMapping("/detail")
+    public Object detail(PayFor payFor){
+        APIResponse res = new APIResponse();
+        try{
+            res.setStatus(1);
+            res.setMessage("detail");
+            res.setData(payForRepository.findByPayForId(payFor.getPayForId()));
+        }catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("err : " + err.toString());
+        }
+        return res;
+    }
 }
