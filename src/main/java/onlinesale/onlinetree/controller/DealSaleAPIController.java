@@ -34,6 +34,9 @@ public class DealSaleAPIController {
     private BillingDeliveryRepository billingDeliveryRepository;
 
     @Autowired
+    private ProfileRegisterRepository profileRegisterRepository;
+
+    @Autowired
     private SmtpMailSender smtpMailSender;
 
     @PostMapping("/calculate")
@@ -277,7 +280,11 @@ public class DealSaleAPIController {
                     dealSale.getProfileRegisterId(),
                     dealSale.getOrderAmountId()
             );
+            ProfileRegister profileRegister = profileRegisterRepository.findByProfileRegisterId(
+                    dealSale.getProfileRegisterId()
+            );
             System.out.println("_dealSale:" + _dealSale);
+            System.out.println("profileRegister.getEmail:" + profileRegister.getEmail());
             if(_dealSale != null){
                     Integer updateApprove = dealSaleRepository.adminUpdateStatusTrue(
                             dealSale.getProfileRegisterId(),
@@ -288,6 +295,7 @@ public class DealSaleAPIController {
                             dealSale.getProfileRegisterId(),
                             dealSale.getOrderId()
                     );
+                    smtpMailSender.send(profileRegister.getEmail(), "Online Tree Sale", "คำสั่งซื้อของคุณถูกอนุมติแล้ว กรุณาแจ้งชำระเงิน");
                     System.out.println("updateCollect:" + updateBilling);
                     res.setStatus(1);
                     res.setMessage("อนุมัติคำสั่งซื้อสำเร็จ");

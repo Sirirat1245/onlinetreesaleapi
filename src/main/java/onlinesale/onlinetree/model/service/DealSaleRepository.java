@@ -85,4 +85,13 @@ public interface DealSaleRepository extends JpaRepository<DealSale, Integer> {
             "AND order_amount_id = :order_amount_id")
     public Integer adminUpdateStatusTrue(@Param("profile_register_id") int profileRegisterId,
                                         @Param("order_amount_id") int orderAmountId);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "UPDATE deal_sale " +
+            "SET status = :status " +
+            "WHERE profile_register_id = :profile_register_id " +
+            "AND order_amount_id = :order_amount_id")
+    public Integer adminUpdateStatusApprove(@Param("profile_register_id") int profileRegisterId,
+                                            @Param("order_amount_id") int orderAmountId);
 }
