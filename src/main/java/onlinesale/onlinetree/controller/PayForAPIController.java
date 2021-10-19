@@ -1,5 +1,6 @@
 package onlinesale.onlinetree.controller;
 
+import onlinesale.onlinetree.SmtpMailSender;
 import onlinesale.onlinetree.config.Config;
 import onlinesale.onlinetree.model.service.BillingDeliveryRepository;
 import onlinesale.onlinetree.model.service.PayForRepository;
@@ -26,6 +27,9 @@ public class PayForAPIController {
 
     @Autowired
     private BillingDeliveryRepository billingDeliveryRepository;
+
+    @Autowired
+    private SmtpMailSender smtpMailSender;
 
     @PostMapping("/save")
     public Object create(PayFor payFor, @RequestParam(value = "file",required = false) MultipartFile file){
@@ -187,16 +191,25 @@ public class PayForAPIController {
                     payFor.getPayForId(),
                     payFor.getProfileRegisterId()
             );
-            System.out.println("status : " + status);
+            PayFor _payFor = payForRepository.findByOrderId(payFor.getOrderId());
             if(status == 1){
-                Integer billingUpdate = billingDeliveryRepository.updateDeliveryStatusPrepareToShip(
-                        payFor.getProfileRegisterId(),
-                        payFor.getOrderId()
-                );
-                System.out.println("billingUpdate : " + billingUpdate);
-                res.setStatus(1);
-                res.setMessage("approve payFor success");
-                res.setData(payForRepository.findByPayForId(payFor.getPayForId()));
+                if(_payFor.getIsPayForStatus() == true){
+                    Integer billingUpdate = billingDeliveryRepository.updateDeliveryStatusPrepareToShip(
+                            payFor.getProfileRegisterId(),
+                            payFor.getOrderId()
+                    );
+                    smtpMailSender.send(payFor.getEmail(), "Online Tree Sale", "อนุมัติการแจ้งชำระเงิน สินค้ากำลังถูกจัดส่ง");
+                    System.out.println("billingUpdate : " + billingUpdate);
+                    res.setStatus(1);
+                    res.setMessage("approve payFor success");
+                    res.setData(payForRepository.findByPayForId(payFor.getPayForId()));
+                }else {
+                    //ไม่อนุมัติเนื่องจากตรวจสอบบิลแล้วไม่ถูกต้อง
+                    smtpMailSender.send(payFor.getEmail(), "Online Tree Sale", "การแจ้งชำระเงินของท่านไม่ถูกต้อง กรุณาตรวจสอบ");
+                    res.setStatus(1);
+                    res.setMessage("disapproved payFor success");
+                    res.setData(payForRepository.findByPayForId(payFor.getPayForId()));
+                }
             }
         } catch (Exception err){
             res.setStatus(-1);
