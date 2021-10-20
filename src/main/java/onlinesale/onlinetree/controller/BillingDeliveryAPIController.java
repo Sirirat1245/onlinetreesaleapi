@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.List;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/billing_delivery")
@@ -89,7 +93,8 @@ public class BillingDeliveryAPIController {
         try {
             Integer updateData = billingDeliveryRepository.updatePickup(
                     billingDelivery.getProfileRegisterId(),
-                    billingDelivery.getOrderId()
+                    billingDelivery.getOrderId(),
+                    LocalDateTime.now(ZoneId.of("UTC+07:00"))
             );
             System.out.println("updateData :" + updateData);
             if(updateData == 1){
@@ -99,6 +104,52 @@ public class BillingDeliveryAPIController {
                 res.setStatus(0);
                 res.setMessage("update pickup failed");
             }
+        }catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("error : " + err.toString());
+        }
+        return res;
+    }
+
+    @PostMapping("/detail")
+    public Object detail(BillingDelivery billingDelivery){
+        APIResponse res = new APIResponse();
+        try {
+            BillingDelivery bill = billingDeliveryRepository.findByProfileRegisterIdAndOrderId(billingDelivery.getProfileRegisterId(),billingDelivery.getOrderId());
+            res.setStatus(1);
+            res.setMessage("find_by_order_id");
+            res.setData(bill);
+        }catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("error : " + err.toString());
+        }
+
+        return res;
+    }
+
+    @PostMapping("/list_by_delivery_status")
+    public Object listByStatus(BillingDelivery billingDelivery){
+        APIResponse res = new APIResponse();
+        try{
+            List<BillingDelivery> lst = billingDeliveryRepository.findByDeliveryStatus(billingDelivery.getDeliveryStatus());
+            res.setStatus(1);
+            res.setMessage("list delivery status "+billingDelivery.getDeliveryStatus());
+            res.setData(lst);
+        }catch (Exception err){
+            res.setStatus(-1);
+            res.setMessage("error : " + err.toString());
+        }
+        return res;
+    }
+
+    @PostMapping("/list_by_pickup_status")
+    public Object listByPickStatus(BillingDelivery billingDelivery){
+        APIResponse res = new APIResponse();
+        try{
+            List<BillingDelivery> lst = billingDeliveryRepository.findByPickUpStatus(billingDelivery.isPickUpStatus());
+            res.setStatus(1);
+            res.setMessage("list pickup status "+billingDelivery.isPickUpStatus());
+            res.setData(lst);
         }catch (Exception err){
             res.setStatus(-1);
             res.setMessage("error : " + err.toString());

@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @ToString
 @Data
@@ -34,4 +35,7 @@ public class BillingDelivery {
     // 0 = false, 1 = true
     @Column(name = "pick_up_status")
     private boolean pickUpStatus;
+
+    @Column(name = "order_date")
+    private LocalDateTime orderDate;
 }

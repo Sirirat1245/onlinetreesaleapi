@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Properties;
 
@@ -196,7 +198,8 @@ public class PayForAPIController {
                 if(_payFor.getIsPayForStatus() == true){
                     Integer billingUpdate = billingDeliveryRepository.updateDeliveryStatusPrepareToShip(
                             payFor.getProfileRegisterId(),
-                            payFor.getOrderId()
+                            payFor.getOrderId(),
+                            LocalDateTime.now(ZoneId.of("UTC+07:00"))
                     );
                     smtpMailSender.send(payFor.getEmail(), "Online Tree Sale", "อนุมัติการแจ้งชำระเงิน สินค้ากำลังถูกจัดส่ง");
                     System.out.println("billingUpdate : " + billingUpdate);
