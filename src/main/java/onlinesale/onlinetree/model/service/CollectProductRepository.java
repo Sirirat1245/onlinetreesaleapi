@@ -33,7 +33,8 @@ public interface CollectProductRepository extends JpaRepository<CollectProduct, 
     @Query(value = "SELECT SUM(price) " +
             "FROM collect_product " +
             "WHERE profile_register_id = :profile_register_id " +
-            "AND is_status = 1", nativeQuery = true)
+            "AND is_status = 1 " +
+            "AND status_buy != 1", nativeQuery = true)
     public Integer sumCollectProductByProfile(@Param("profile_register_id") Integer profileRegisterId);
 
     @Transactional

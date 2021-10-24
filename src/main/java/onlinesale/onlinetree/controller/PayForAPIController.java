@@ -201,14 +201,14 @@ public class PayForAPIController {
                             payFor.getOrderId(),
                             LocalDateTime.now(ZoneId.of("UTC+07:00"))
                     );
-                    smtpMailSender.send(payFor.getEmail(), "Online Tree Sale", "อนุมัติการแจ้งชำระเงิน สินค้ากำลังถูกจัดส่ง");
+                    smtpMailSender.send(_payFor.getEmail(), "Online Tree Sale", "อนุมัติการแจ้งชำระเงิน สินค้ากำลังถูกจัดส่ง");
                     System.out.println("billingUpdate : " + billingUpdate);
                     res.setStatus(1);
                     res.setMessage("approve payFor success");
                     res.setData(payForRepository.findByPayForId(payFor.getPayForId()));
                 }else {
                     //ไม่อนุมัติเนื่องจากตรวจสอบบิลแล้วไม่ถูกต้อง
-                    smtpMailSender.send(payFor.getEmail(), "Online Tree Sale", "การแจ้งชำระเงินของท่านไม่ถูกต้อง กรุณาตรวจสอบ");
+                    smtpMailSender.send(_payFor.getEmail(), "Online Tree Sale", "การแจ้งชำระเงินของท่านไม่ถูกต้อง กรุณาตรวจสอบ");
                     res.setStatus(1);
                     res.setMessage("disapproved payFor success");
                     res.setData(payForRepository.findByPayForId(payFor.getPayForId()));

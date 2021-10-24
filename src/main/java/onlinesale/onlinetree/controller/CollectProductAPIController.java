@@ -29,11 +29,13 @@ public class CollectProductAPIController {
                     collectProduct.getProductId(),
                     collectProduct.getProfileRegisterId());
             if(_collectProduct == null){
+                //ไปเช็คในยืนยัน order ว่า profile ที่จะเลือก product นี้ มี order ที่ยืนยันไปแล้วแต่ยังไม่ชำระเงินหรือเปล่า ถ้ามีให้ไปจ่ายเงินก่อน ค่อยเลือกใหม่
                 collectProductRepository.save(collectProduct);
                 res.setStatus(1);
                 res.setMessage("save");
                 res.setData(collectProduct);
             } else {
+                //ไปเช็คในยืนยัน order ว่า profile ที่จะเลือก product นี้ มี order ที่ยืนยันไปแล้วแต่ยังไม่ชำระเงินหรือเปล่า ถ้ามีให้ไปจ่ายเงินก่อน ค่อยเลือกใหม่
                 Integer status = collectProductRepository.updateCollectProduct(
                         collectProduct.getIsStatus(),
                         collectProduct.getAmount(),
